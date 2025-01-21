@@ -48,7 +48,7 @@ const targetColors = [
 let target = new Target(position, PPI, targetRadius, numRings, targetColors);
 
 const init = () => {
-  document.body.classList.remove("hidden");
+  document.body.style.display = "block";
   
   // Buttons
   const btns = document.getElementById("button-container");
