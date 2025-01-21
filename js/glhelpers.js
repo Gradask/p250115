@@ -88,7 +88,6 @@ const glhelpers = {
     return tex;
   },
   loadImage(gl, tex, url) {
-    console.log("load", url)
     return new Promise((resolve, reject) => {
       let img = new Image();
 
