@@ -4,6 +4,7 @@
 @import url("results.css");
 
 body {
+  display: none;
   margin: 0;
   background: rgb(248, 202, 212);
   font-family: arial;
