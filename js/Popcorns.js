@@ -34,7 +34,7 @@ class Popcorns {
     }
 
     // Sound effect
-    this.popSound = new Audio("p250115/audio/pop.wav");
+    this.popSound = new Audio("audio/pop.wav");
     this.maxConcurrentPops = 10;
     this.activePops = 0;
 
