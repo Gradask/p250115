@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/main.css" type="text/css" />
+    <title>Popcorn Draws</title>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <canvas id="canvas2D"></canvas>
+    <div id="input-container" class="hidden">
+      <textarea id="input"  placeholder="Line by line input
+Enter name and movie separated by -" spellcheck="false"></textarea>
+    </div>
+    
+    <!-- <textarea id="feed" spellcheck="false" readonly></textarea> -->
+    
+    <div id="settings" class="hidden">
+      <button class="time-option">10x</button>
+      <button class="time-option">2x</button>
+      <button class="time-option selected">1x</button>
+      <button class="time-option">0.5x</button>
+      <button class="time-option">0.1x</button>
+    </div>
+    
+    <div id="button-container">
+      <button id="+">+</button>
+      <button id="settingsBtn">⏱</button>
+      <button id="time" class="selected">Elimination</button>
+      <button id="distance">Pop Fly</button>
+      <button id="start">></button>
+      <button id="pause" class="hidden">||</button>
+    </div>
+
+    <div id="results" class="hidden">
+      <p id="announcement">WINNER</p>
+      <p id="winner">[Winner Name]</p>
+      <p id="movie">[Movie Name]</p>
+      <button id="closeBtn">Close</button>
+    </div>
+    
+    <!-- <div id="sliders">
+      <label for="slider1">Slider 1:</label>
+    <input type="range" id="slider1" min=-5 max=5 step=0.1 value=0>
+    <br>
+    <label for="slider2">Slider 2:</label>
+    <input type="range" id="slider2" min=-5 max=5 step=0.1 value=-0>
+    <br>
+    <label for="slider3">Slider 3:</label>
+    <input type="range" id="slider3" min=-5 max=5 step=0.1 value=0>
+    </div> -->
+
+    <script src="js/client.js" type="module"></script>
+  </body>
+</html>

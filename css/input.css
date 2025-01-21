@@ -1,0 +1,42 @@
+#input-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  background: rgba(46, 46, 57, 0.9);
+  padding: 10px;
+  border-radius: 10px;
+  z-index: 1;
+}
+
+#input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  
+  font-family: arial;
+  font-size: 14px;
+  text-align: left;
+  color: rgb(255, 95, 129);
+  white-space: pre;
+  
+  resize: none;
+  flex-grow: 1;
+  overflow-x: auto;
+  overflow-y: auto; 
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  
+  background: transparent;
+  mask-image: linear-gradient(to right, black, black 80%, transparent);
+  -webkit-mask-image: linear-gradient(to right, black, black 80%, transparent);
+}
+
+#input::placeholder {
+  color: rgb(255, 95, 129);
+  opacity: 1; /* Firefox */
+}

@@ -1,0 +1,31 @@
+@import url("input.css");
+@import url("buttons.css");
+@import url("settings.css");
+@import url("results.css");
+
+body {
+  margin: 0;
+  background: rgb(248, 202, 212);
+  font-family: arial;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+/* 
+.selected {
+  background: rgb(255, 95, 129);
+} */
+
+.hidden {
+  visibility: hidden;
+}
+
+/* #sliders {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100000;
+} */
