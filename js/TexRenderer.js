@@ -12,7 +12,7 @@ class TexRenderer {
   }
 
   async setupTextures(gl) {
-    let tex1 = await glhelpers.setupTexture(gl, "../img/popcorn.png", {
+    let tex1 = await glhelpers.setupTexture(gl, "img/popcorn.png", {
       TEXTURE_WRAP_S: "CLAMP_TO_EDGE",
       TEXTURE_WRAP_T: "CLAMP_TO_EDGE",
       TEXTURE_MIN_FILTER: "NEAREST",
