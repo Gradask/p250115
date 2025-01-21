@@ -18,8 +18,8 @@ class TexRenderer {
       TEXTURE_MIN_FILTER: "NEAREST",
       TEXTURE_MAG_FILTER: "NEAREST"
     });
-    let tex2 = await glhelpers.setupTexture(gl, "p250115/img/font.png");
-    let tex3 = await glhelpers.setupTexture(gl, "p250115/mesh/Map__45_Normal_Bump.png");
+    let tex2 = await glhelpers.setupTexture(gl, "img/font.png");
+    let tex3 = await glhelpers.setupTexture(gl, "mesh/Map__45_Normal_Bump.png");
   
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tex1);
