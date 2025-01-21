@@ -10,10 +10,10 @@ class Mesh {
 
   async loadMesh(meshId) {
     const data = {};
-    const gltf = await fetch(`p250115/mesh/${meshId}.gltf`);
+    const gltf = await fetch(`mesh/${meshId}.gltf`);
     data.gltf = await gltf.text();
 
-    const bin = await fetch(`p250115/mesh/${meshId}.bin`);
+    const bin = await fetch(`mesh/${meshId}.bin`);
     data.bin = await bin.arrayBuffer();
 
     gltfhelpers.parseGLTF(data);
