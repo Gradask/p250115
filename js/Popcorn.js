@@ -63,7 +63,6 @@ class Popcorn {
         [0.6, 0.25]     // Sprite 4
     ];
     const randomIndex = Math.floor(Math.random() * 3);
-    console.log(randomIndex)
     return texcoords[randomIndex];
   }
 
