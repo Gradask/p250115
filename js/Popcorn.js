@@ -9,6 +9,7 @@ const predefinedColors = [
 ]
 
 let colorIndex = 0;
+let spriteIndex = 0;
 let id = 0;
 
 class Popcorn {
@@ -62,8 +63,9 @@ class Popcorn {
         [0.4, 0.25],    // Sprite 3
         [0.6, 0.25]     // Sprite 4
     ];
-    const randomIndex = Math.floor(Math.random() * 3);
-    return texcoords[randomIndex];
+    const coords = texcoords[spriteIndex];
+    spriteIndex = (spriteIndex + 1) % texcoords.length;
+    return coords;
   }
 
   getColor() {
