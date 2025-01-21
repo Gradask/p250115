@@ -58,12 +58,13 @@ class Popcorn {
   
   getPopcornSprite() {
     const texcoords = [
-        /*[0.0, 0.25]*/,    // Sprite 1
+        // [0.0, 0.25],    // Sprite 1
         [0.2, 0.25],    // Sprite 2 
         [0.4, 0.25],    // Sprite 3
         [0.6, 0.25]     // Sprite 4
     ];
     const randomIndex = Math.floor(Math.random() * 3);
+    console.log(randomIndex)
     return texcoords[randomIndex];
   }
 
