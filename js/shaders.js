@@ -89,8 +89,7 @@ const tex = {
       if (texColor.a < 0.1) discard;
 
       fragColor = texColor;
-      if (v_pointSize < 10.0) fragColor = vec4(v_color, 1.0); // == 8.0 slutade fungera av någon anledning
-      // if (abs(v_pointSize - 8.0) < 0.01) fragColor = vec4(v_color, 1.0); "Problem: The conditional statement if (v_pointSize == 8.0) might be causing flickering or inconsistent behavior. Floating-point comparisons are notoriously unreliable due to precision issues."
+      if (v_pointSize < 10.0) fragColor = vec4(v_color, 1.0);
     }`,
   attribs: {
     a_position: {
