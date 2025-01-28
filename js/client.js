@@ -242,22 +242,12 @@ function handleInput() {
 
   pops.length = 0;
   pops.push(...newPops);
-  console.log("before:", JSON.parse(JSON.stringify(pops)));
-  shuffleArray(pops);
-  console.log("after:", JSON.parse(JSON.stringify(pops)));
   popcorns.generateKernels(pops);
   nameTags.generateTags(pops);
   records = names;
   popcorns.attribs.a_color.data = nameTags.attribs.a_color.data;
   updateMovie(pops, updatedRecords);
   shouldRender = true;
-}
-
-function shuffleArray(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const randomIndex = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]];
-  }
 }
 
 function parseInput(val) {
