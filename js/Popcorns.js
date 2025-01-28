@@ -54,10 +54,18 @@ class Popcorns {
 
   resetPopcorns() {
     this.popcorns = [];
+    this.shuffleArray(this.all);
     this.kernels = [...this.all];
     for (const kernel of this.kernels) kernel.reset(this.maxTime, this.elapsedTime);
     this.kernels.sort((a, b) => a.popTime - b.popTime);
     this.addSuspense();
+  }
+
+  shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]];
+    }
   }
 
   switchMode(mode) {
@@ -66,7 +74,7 @@ class Popcorns {
   }
 
   addSuspense() {
-    // Spread out top 3 for maximum suspense
+    // Spread out top 3 for increased suspense
     const last = this.kernels[this.kernels.length - 1];
     const secondToLast = this.kernels[this.kernels.length - 2];
     const scaleFactor = this.maxTime/60; // 0.1, 0.5, 1, 2, 10
