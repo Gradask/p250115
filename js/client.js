@@ -179,12 +179,7 @@ const init = () => {
           movieNameElement.textContent = modes[mode].winner.movie;
           show(resultsContainer);
           showResults = false;
-        }
-
-        const blinking = popcorns.all.some(p => p.blink);
-        if (!blinking) {
           isRunning = false;
-          shouldRender = true;
           deselect(startBtn);
         }
       }
