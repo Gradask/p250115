@@ -164,6 +164,8 @@ class Popcorns {
         }
         continue;
       }
+
+      if (popcorn.state === "popped") continue;
     
       popcorn.velocity[2] -= 9.81 * deltaTime * 0.001; // Apply gravity
       
