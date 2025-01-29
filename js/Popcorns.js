@@ -124,6 +124,7 @@ class Popcorns {
   
     this.elapsedTime += deltaTime / 1000;
     this.kernelTime += deltaTime / 1000 * this.rate;
+    console.log(this.elapsedTime, this.kernelTime)
     this.lastTime = time;
 
     if (this.kernels.length > 0) this.updateKernels(); 
