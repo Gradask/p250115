@@ -61,7 +61,7 @@ const init = () => {
   // Input
   const inputContainer = document.getElementById("input-container");
   const input = document.getElementById("input");
-  input.textContent = "";
+  input.value = "";
 
   // Settings
   const settings = document.getElementById("settings");
