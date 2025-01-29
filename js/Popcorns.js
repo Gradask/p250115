@@ -134,6 +134,7 @@ class Popcorns {
 
   updateKernels() {
     while (this.kernels.length > 0 && this.kernels[0].popTime <= /*this.elapsedTime*/this.kernelTime) {
+      if (mode === "time" && this.kernels.length === 1) return;
       const popcorn = this.kernels.shift();
       popcorn.pop(this.elapsedTime);
       this.popcorns.push(popcorn);
@@ -243,7 +244,10 @@ class Popcorns {
   updateTimeResults() {
     if (this.kernels.length === 1) {
       this.modes.time.winner = this.kernels[0];
-      this.modes.time.stop();
+
+      if (this.all.filter(p => p.blinkState).length === 1) {
+        this.modes.time.stop();
+      }
     }
   }
 
