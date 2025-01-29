@@ -10,6 +10,7 @@ class Popcorns {
     // Time
     this.maxTime = 60;
     this.elapsedTime = 0;
+    this.kernelTime = 0;
     this.lastime;
     this.baselineDeltaTime = 16.7; // 50 fps
     this.maxDeltaTime = 67; // ~15 fps
@@ -49,7 +50,8 @@ class Popcorns {
 
   updateMaxTime(setting) {
     const rate = parseFloat(setting.replace("x", ""));
-    this.maxTime = 60 / rate;
+    //this.maxTime = 60 / rate;
+    this.rate = rate;
   }
 
   resetPopcorns() {
@@ -86,6 +88,7 @@ class Popcorns {
   resetTime() {
     this.lastTime = performance.now();
     this.elapsedTime = 0;
+    this.kernelTime = 0;
   }
 
   resetModes() {
@@ -120,6 +123,7 @@ class Popcorns {
     const timeScale = deltaTime / this.baselineDeltaTime;
   
     this.elapsedTime += deltaTime / 1000;
+    this.kernelTime += deltaTime / 1000 * this.rate;
     this.lastTime = time;
 
     if (this.kernels.length > 0) this.updateKernels(); 
@@ -127,7 +131,7 @@ class Popcorns {
   }
 
   updateKernels() {
-    while (this.kernels.length > 0 && this.kernels[0].popTime <= this.elapsedTime) {
+    while (this.kernels.length > 0 && this.kernels[0].popTime <= /*this.elapsedTime*/this.kernelTime) {
       const popcorn = this.kernels.shift();
       popcorn.pop(this.elapsedTime);
       this.popcorns.push(popcorn);
