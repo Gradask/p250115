@@ -56,7 +56,7 @@ const tex = {
 
     void main() {
       // Transform to clip space
-      vec4 worldPos = u_matrix * vec4(a_position, 1.0);
+      vec4 worldPos = u_matrix * vec4(a_position/60.0, 1.0);
 
       // Convert clip space to window coordinates
       vec2 windowPos = (worldPos.xy / worldPos.w) * 0.5 + 0.5;
