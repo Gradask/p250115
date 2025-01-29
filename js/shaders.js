@@ -85,7 +85,7 @@ const tex = {
   fs: `#version 300 es
     precision mediump float;
 
-    in float v_worldOffset;
+    in vec2 v_worldOffset;
     in vec3 v_color;
     in vec2 v_texcoord;
     uniform sampler2D u_texture; // Sprite atlas
