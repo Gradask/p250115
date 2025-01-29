@@ -51,35 +51,22 @@ const tex = {
     uniform vec2 u_resolution;
 
     out vec2 v_texcoord;
-    out vec3 v_color;
     out vec2 v_worldOffset;
+    out vec3 v_color;
 
     void main() {
-      // Transform to clip space
-      vec4 worldPos = u_matrix * vec4(a_position/60.0, 1.0);
+      // Transform position to clip space
+      vec4 worldPosition = u_matrix * vec4(a_position/60.0, 1.0);
 
-      // Convert clip space to window coordinates
-      vec2 windowPos = (worldPos.xy / worldPos.w) * 0.5 + 0.5;
-      windowPos *= u_resolution;
+      // Convert pixel offsets to clip space, scaling by worldPosition.w for depth correction
+      vec2 offsetInClipSpace = (a_worldOffset / u_resolution) * 2.0 * worldPosition.w;
 
-      // Apply glyph offset
-      windowPos += a_worldOffset;
+      // Apply the offset in clip space
+      gl_Position = worldPosition + vec4(offsetInClipSpace, 0.0, 0.0);
 
-      // If snapping is enabled, snap to nearest pixel
-      if (u_pointSize > 10.0) {
-        windowPos = floor(windowPos + 0.5);
-      }
-
-      // Convert back to clip space
-      vec2 snappedNDC = (windowPos / u_resolution - 0.5) * 2.0;
-      gl_Position = vec4(snappedNDC * worldPos.w, worldPos.z, worldPos.w);
-
-      // Set point size
       gl_PointSize = u_pointSize;
-
-      // Pass color and texcoord
-      v_color = a_color;
       v_texcoord = a_texcoord;
+      v_color = a_color;
       v_worldOffset = a_worldOffset;
     }`,
   fs: `#version 300 es
