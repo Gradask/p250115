@@ -144,7 +144,7 @@ class Popcorns {
 
   updatePopcorns(deltaTime) {
     for (const popcorn of this.popcorns) {
-      if (popcorn.state === "popped") {
+      if (mode === "time" && popcorn.state === "popped") {
         if (popcorn.blink) {
           if (!popcorn.startBlinkTime) popcorn.startBlinkTime = this.elapsedTime;
       
@@ -156,6 +156,7 @@ class Popcorns {
             if (blinkElapsed >= popcorn.blinkDuration) {
               popcorn.blinkState = false;
               popcorn.blink = false;
+              this.updateTimeResult();
             }
           } else {
             popcorn.blinkState = true;
@@ -244,7 +245,7 @@ class Popcorns {
     if (this.kernels.length === 1) {
       this.modes.time.winner = this.kernels[0];
 
-      if (this.all.filter(p => p.blinkState).length === 1) {
+      if (this.all.filter(p => p.blink).length === 1) {
         this.modes.time.stop();
       }
     }
