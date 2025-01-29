@@ -156,7 +156,7 @@ class Popcorns {
             if (blinkElapsed >= popcorn.blinkDuration) {
               popcorn.blinkState = false;
               popcorn.blink = false;
-              this.updateTimeResult();
+              this.updateTimeResults();
             }
           } else {
             popcorn.blinkState = true;
