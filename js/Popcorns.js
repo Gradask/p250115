@@ -9,6 +9,7 @@ class Popcorns {
 
     // Time
     this.maxTime = 60;
+    this.rate = 1;
     this.elapsedTime = 0;
     this.kernelTime = 0;
     this.lastime;
