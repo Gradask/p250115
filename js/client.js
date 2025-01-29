@@ -180,6 +180,7 @@ const init = () => {
           show(resultsContainer);
           showResults = false;
           isRunning = false;
+          shouldRender = true;
           deselect(startBtn);
         }
       }
