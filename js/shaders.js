@@ -52,27 +52,40 @@ const tex = {
 
     out vec2 v_texcoord;
     out vec3 v_color;
-    out float v_pointSize;
+    out vec2 v_worldOffset;
 
     void main() {
-      // Transform position to clip space
-      vec4 worldPosition = u_matrix * vec4(a_position/60.0, 1.0);
+      // Transform to clip space
+      vec4 worldPos = u_matrix * vec4(a_position, 1.0);
 
-      // Convert pixel offsets to clip space, scaling by worldPosition.w for depth correction
-      vec2 offsetInClipSpace = (a_worldOffset / u_resolution) * 2.0 * worldPosition.w;
+      // Convert clip space to window coordinates
+      vec2 windowPos = (worldPos.xy / worldPos.w) * 0.5 + 0.5;
+      windowPos *= u_resolution;
 
-      // Apply the offset in clip space
-      gl_Position = worldPosition + vec4(offsetInClipSpace, 0.0, 0.0);
+      // Apply glyph offset
+      windowPos += a_worldOffset;
 
+      // If snapping is enabled, snap to nearest pixel
+      if (u_pointSize > 10.0) {
+        windowPos = floor(windowPos + 0.5);
+      }
+
+      // Convert back to clip space
+      vec2 snappedNDC = (windowPos / u_resolution - 0.5) * 2.0;
+      gl_Position = vec4(snappedNDC * worldPos.w, worldPos.z, worldPos.w);
+
+      // Set point size
       gl_PointSize = u_pointSize;
-      v_texcoord = a_texcoord;
-      v_pointSize = u_pointSize;
+
+      // Pass color and texcoord
       v_color = a_color;
+      v_texcoord = a_texcoord;
+      v_worldOffset = a_worldOffset;
     }`,
   fs: `#version 300 es
     precision mediump float;
 
-    in float v_pointSize;
+    in float v_worldOffset;
     in vec3 v_color;
     in vec2 v_texcoord;
     uniform sampler2D u_texture; // Sprite atlas
@@ -89,7 +102,7 @@ const tex = {
       if (texColor.a < 0.1) discard;
 
       fragColor = texColor;
-      if (v_pointSize < 10.0) fragColor = vec4(v_color, 1.0);
+      if (v_worldOffset.x > 0.0) fragColor = vec4(v_color, 1.0);
     }`,
   attribs: {
     a_position: {
