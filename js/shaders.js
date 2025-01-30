@@ -81,8 +81,9 @@ const tex = {
 
     void main() {
       vec2 uvScale = vec2(16.0 / u_texSize.x, 16.0 / u_texSize.y);
-      vec2 uv = v_texcoord + (gl_PointCoord * uvScale); // Adjust UV mapping
-
+      //vec2 uv = v_texcoord + (gl_PointCoord * uvScale); // Adjust UV mapping
+      vec2 uv = v_texcoord + ((gl_PointCoord - vec2(0.5)) * uvScale);
+      
       vec4 texColor = texture(u_texture, uv);
       
       // Optional: Discard transparent fragments for correct blending
