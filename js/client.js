@@ -157,6 +157,7 @@ const init = () => {
         popcorns.updateMaxTime(setting);
       } else if (group.classList.contains("font-options")) {
         nameTags.updateSize(pops, setting);
+        this.shouldRender = true;
       }
     }
   });
