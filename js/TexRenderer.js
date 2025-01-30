@@ -18,7 +18,7 @@ class TexRenderer {
       TEXTURE_MIN_FILTER: "NEAREST",
       TEXTURE_MAG_FILTER: "NEAREST"
     });
-    let tex2 = await glhelpers.setupTexture(gl, "img/font.png");
+    let tex2 = await glhelpers.setupTexture(gl, "img/ellerdenna.png");
     let tex3 = await glhelpers.setupTexture(gl, "mesh/Map__45_Normal_Bump.png");
   
     gl.activeTexture(gl.TEXTURE0);
