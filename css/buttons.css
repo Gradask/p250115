@@ -8,14 +8,13 @@
   z-index: 1;
   align-items: center;
   justify-content: center;
-  white-space: nowrap;
 }
 
 #button-container button {
   padding: 10px 20px;
+  height: 40px;
   font-size: 16px;
   color: white;
-  height: 40px;
   cursor: pointer;
   border: none;
   background: rgba(46, 46, 57, 1);
@@ -27,12 +26,17 @@
 }
 
 #button-container #settingsBtn {
-  font-size: 24px;
-  width: 48px;
-  padding: 0;
+  font-size: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: normal;
-  text-align: center;
+  width: 40px;
+  height: 40px;
+  line-height: 1; /* Prevents extra spacing */
+  padding: 0;
+}
+
+#settingsBtn span {
+  position: relative;
+  top: -3px; /* Nudges only the cog upwards */
 }
