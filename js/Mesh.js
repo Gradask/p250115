@@ -32,7 +32,7 @@ class Mesh {
     this.indices = this.primitives.indices;
     this.materials = data.materials;
     
-    this.u_normalTexture = 2;
+    this.u_normalTexture = 3;
     this.u_metallicFactor = this.materials[0].metallicFactor;
     this.u_roughnessFactor = this.materials[0].roughnessFactor;
 
