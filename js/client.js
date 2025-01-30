@@ -143,11 +143,22 @@ const init = () => {
 
   settings.addEventListener("click", (event) => {
     if (event.target.tagName === "BUTTON") {
-      deselect(settings.querySelector(".selected"));
+      const group = event.target.closest(".option-container");
+
+      if (!group) return;
+
+      const selected = group.querySelector(".selected");
+      if (selected) deselect(selected);
       select(event.target);
 
       const setting = event.target.textContent;
-      popcorns.updateMaxTime(setting);
+
+      if (group.classList.contains("time-options")) {
+        popcorns.updateMaxTime(setting);
+      } else if (group.classList.contains("font-options")) {
+        console.log("update label")
+        //updateLabelSize(setting);
+      }
     }
   });
 
