@@ -48,7 +48,7 @@ class NameTags {
   
     //const offsetX = this.nameTagOffset[0] + i * 6 // Note: Actual offset, including black contour, is 16. Without the contour, it's more like 10.
     //const offsetX = Math.round(this.nameTagOffset[0] + i * this.u_pointSize * 0.64);
-    const offsetX = i * this.u_pointSize * 0.64);
+    const offsetX = i * this.u_pointSize * 0.64;
     //const offsetY = this.nameTagOffset[1];
     const offsetY = 0;
   
