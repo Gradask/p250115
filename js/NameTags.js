@@ -81,6 +81,7 @@ class NameTags {
   updateSize(kernels, setting) {
     const pointSize = parseFloat(setting.replace("x", ""));
     this.u_pointSize = this.baseSize * pointSize;
+    this.u_texture = this.u_pointSize === 8 ? 1 : 2;
     this.setOffset();
     this.generateTags(kernels);
   }
