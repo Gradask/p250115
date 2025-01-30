@@ -1,3 +1,5 @@
+import { mode } from "./client.js";
+
 const predefinedColors = [
   [255, 0, 0], // Red
   [0, 150, 50], // Green
@@ -18,7 +20,7 @@ class Popcorn {
     this.id = id++;
     this.worldOffset = [0, 0];
     this.color = [255, 0, 0];
-    this.tagColor = this.getColor()
+    this.tagColor = this.getColor();
     this.blinkDuration = 0.5;
 
     this.minZVelocity = 2;
@@ -36,9 +38,10 @@ class Popcorn {
     this.blinkState = true;
     this.startBlinkTime = null;
 
-
     this.startTime = null;
     this.hasBeenInTheLead = null;
+
+    this.getBuffer();
   }
 
   pop(elapsedTime) {
@@ -46,11 +49,21 @@ class Popcorn {
     this.state = "popping";
     this.velocity = this.getVelocity();
     this.a_texcoord = this.getPopcornSprite();
+    this.getBuffer();
   }
 
   stop() {
     this.state = "popped";
     this.getRadialDistance();
+  }
+
+  getBuffer() {
+    const size = mode === "time" ? 32 : 16;
+    const scale = this.state === "kernel" ? 1 : 2;
+    this.buffer = [
+      scale * size * 0.5, // x
+      scale * size * 0.5 // y
+    ];
   }
 
   getKernelSprite() {
