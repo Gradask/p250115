@@ -58,7 +58,7 @@ class Popcorn {
   }
 
   getBuffer() {
-    const size = mode === "time" ? 34 : 16;
+    const size = mode === "time" ? 32 : 18;
     const scale = this.state === "kernel" ? 1 : 1.5;
     this.buffer = [
       scale * size * 0.35, // x
