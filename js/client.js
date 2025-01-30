@@ -156,8 +156,7 @@ const init = () => {
       if (group.classList.contains("time-options")) {
         popcorns.updateMaxTime(setting);
       } else if (group.classList.contains("font-options")) {
-        console.log("update label")
-        //updateLabelSize(setting);
+        nameTags.updateSize(pops, setting);
       }
     }
   });
