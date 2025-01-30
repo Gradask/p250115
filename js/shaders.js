@@ -51,23 +51,38 @@ const tex = {
     uniform vec2 u_resolution;
 
     out vec2 v_texcoord;
-    out vec2 v_worldOffset;
     out vec3 v_color;
 
+    out vec2 v_worldOffset;
+    out float v_pointSize;
+
     void main() {
-      // Transform position to clip space
-      vec4 worldPosition = u_matrix * vec4(a_position/60.0, 1.0);
+      // Transform position from model space -> clip space
+      vec4 worldPos = u_matrix * vec4(a_position/60.0, 1.0);
 
-      // Convert pixel offsets to clip space, scaling by worldPosition.w for depth correction
-      vec2 offsetInClipSpace = (a_worldOffset / u_resolution) * 2.0 * worldPosition.w;
+      // Convert clip space to [0..1], then to window coordinates
+      vec2 windowPos = (worldPos.xy / worldPos.w) * 0.5 + 0.5;
+      windowPos *= u_resolution;
 
-      // Apply the offset in clip space
-      gl_Position = worldPosition + vec4(offsetInClipSpace, 0.0, 0.0);
+      // Add your per-glyph offset (in pixels) here
+      windowPos += a_worldOffset;
 
+      // Snap to nearest integer
+      windowPos = floor(windowPos + 0.5);
+
+      // Convert back to clip space
+      vec2 snappedNDC = (windowPos / u_resolution - 0.5) * 2.0;
+      gl_Position = vec4(snappedNDC * worldPos.w, worldPos.z, worldPos.w);
+
+      // Set the point size
       gl_PointSize = u_pointSize;
-      v_texcoord = a_texcoord;
+
+      // Pass through color and texcoord
       v_color = a_color;
+      v_texcoord = a_texcoord;
+
       v_worldOffset = a_worldOffset;
+      v_pointSize = u_pointSize;
     }`,
   fs: `#version 300 es
     precision mediump float;
