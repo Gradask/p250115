@@ -23,14 +23,23 @@ Stick Figure Studios - The Fifth Element (1997)
         " spellcheck="false"></textarea>
     </div>
     
-    <!-- <textarea id="feed" spellcheck="false" readonly></textarea> -->
-    
     <div id="settings" class="hidden">
-      <button class="time-option">10x</button>
-      <button class="time-option">2x</button>
-      <button class="time-option selected">1x</button>
-      <button class="time-option">0.5x</button>
-      <button class="time-option">0.1x</button>
+      <div class="settings-group">
+        <span class="settings-label">Label size</span>
+        <div class="option-container font-options">
+          <button class="font-option selected">1x</button>
+          <button class="font-option">2x</button>
+        </div>
+      </div>
+      <div class="settings-group">
+        <span class="settings-label">Speed</span>
+        <div class="option-container time-options">
+          <button class="time-option">0.5x</button>
+          <button class="time-option selected">1x</button>
+          <button class="time-option">2x</button>
+          <button class="time-option">10x</button>
+        </div>
+      </div>
     </div>
     
     <div id="button-container">
