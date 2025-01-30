@@ -7,8 +7,8 @@ class NameTags {
     this.u_texSize = texSize;
     this.u_texture = 1;
     this.fontInfo = fontInfo;
-    this.nameTagOffset = [12, 8];
     this.baseSize = 8;
+    this.setOffset();
 
     this.attribs = {
       a_position: { data: [] },
@@ -45,7 +45,8 @@ class NameTags {
     const u1 = u / tw;
     const v1 = v / th;
   
-    const offsetX = this.nameTagOffset[0] + i * 6 // Note: Actual offset, including black contour, is 16. Without the contour, it's more like 10.
+    //const offsetX = this.nameTagOffset[0] + i * 6 // Note: Actual offset, including black contour, is 16. Without the contour, it's more like 10.
+    const offsetX = Math.round(this.nameTagOffset[0] + i * this.u_pointSize * 0.64);
     const offsetY = this.nameTagOffset[1];
   
     return {
@@ -71,6 +72,10 @@ class NameTags {
         this.count++;
       }
     }
+  }
+
+  setOffset() {
+    this.nameTagOffset = this.u_pointSize === 8 ? [20, 8] : [24, 16];
   }
 
   updateSize(kernels, setting) {
