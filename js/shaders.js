@@ -89,7 +89,7 @@ const tex = {
       if (texColor.a < 0.1) discard;
 
       fragColor = texColor;
-      if (v_worldOffset.x > 0.0) fragColor = vec4(v_color, 1.0);
+      //if (v_worldOffset.x > 0.0) fragColor = vec4(v_color, 1.0);
     }`,
   attribs: {
     a_position: {
