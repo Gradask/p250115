@@ -8,7 +8,7 @@ class NameTags {
     this.u_texture = 1;
     this.fontInfo = fontInfo;
     this.baseSize = 8;
-    this.setOffset();
+    //this.setOffset();
 
     this.attribs = {
       a_position: { data: [] },
@@ -35,7 +35,8 @@ class NameTags {
 
     this.chars = chars;
     this.attribs.a_texcoord.data = chars.a_texcoord.flat();
-    this.attribs.a_worldOffset.data = chars.a_worldOffset.flat();
+    //this.attribs.a_worldOffset.data = chars.a_worldOffset.flat();
+    this.relOffsets = chars.a_worldOffset;
     if (generateColors) this.attribs.a_color.data = chars.a_color.flat();
   }
 
@@ -61,6 +62,7 @@ class NameTags {
 
   updateRenderables(popcorns) {
     this.attribs.a_position.data = [];
+    this.attribs.a_worldOffset.data = [];
     this.count = 0;
     for (const popcorn of popcorns.all) {
       let [x, y, z] = popcorn.position;
@@ -69,12 +71,21 @@ class NameTags {
         const item = this.fontInfo.items[this.sanitizeString(char.toLowerCase())];
         if (!item) continue;
         this.attribs.a_position.data.push(x, y, z);
+
+        const absOffset = popcorn.buffer;
+        const relOffset = this.relOffsets[this.count];
+        this.attribs.a_worldOffset.data.push(
+          absOffset[0] + relOffset[0], // x
+          absOffset[1] + relOffset[1], // y
+        );
+        
         this.count++;
       }
     }
   }
 
   setOffset() {
+    return;
     const spriteSize = mode === "time" ? 32 : 16;
     this.nameTagOffset = [
       (spriteSize + this.u_pointSize)/4 + 2,
@@ -83,6 +94,7 @@ class NameTags {
   }
 
   updateSize(kernels, setting) {
+    return;
     const scaleFactor = parseFloat(setting.replace("x", ""));
     this.u_pointSize = this.baseSize * scaleFactor;
     this.u_texture = this.u_pointSize === 8 ? 1 : 2;
@@ -91,6 +103,7 @@ class NameTags {
   }
 
   switchMode(kernels) {
+    return;
     this.setOffset();
     this.generateTags(kernels);
   }
