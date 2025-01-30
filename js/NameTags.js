@@ -75,14 +75,22 @@ class NameTags {
   }
 
   setOffset() {
-    this.nameTagOffset = this.u_pointSize === 8 ? [20, 8] : [24, 16];
+    const spriteSize = mode === "time" ? 32 : 16;
+    this.nameTagOffset = [
+      (spriteSize + this.u_pointSize)/4,
+      (spriteSize + this.u_pointSize)/4,
+    ]
   }
 
   updateSize(kernels, setting) {
-    const pointSize = parseFloat(setting.replace("x", ""));
-    this.u_pointSize = this.baseSize * pointSize;
+    const scaleFactor = parseFloat(setting.replace("x", ""));
+    this.u_pointSize = this.baseSize * scaleFactor;
     this.u_texture = this.u_pointSize === 8 ? 1 : 2;
-    console.log("u_texture", this.u_texture)
+    this.setOffset();
+    this.generateTags(kernels);
+  }
+
+  switchMode(kernels) {
     this.setOffset();
     this.generateTags(kernels);
   }
