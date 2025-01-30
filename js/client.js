@@ -95,6 +95,7 @@ const init = () => {
       mode = "time";
       popcorns.switchMode("time");
       popcorns.reset();
+      nameTags.switchMode(pops);
       select(timeBtn);
       deselect(distanceBtn);
       deselect(startBtn);
@@ -110,6 +111,7 @@ const init = () => {
       mode = "distance";
       popcorns.switchMode("distance");
       popcorns.reset();
+      nameTags.switchMode(pops);
       select(distanceBtn);
       deselect(timeBtn);
       deselect(startBtn);
