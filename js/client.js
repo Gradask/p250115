@@ -249,7 +249,7 @@ function handleInput() {
   pops.length = 0;
   pops.push(...newPops);
   popcorns.generateKernels(pops);
-  nameTags.generateTags(pops);
+  nameTags.generateTags(pops, true);
   records = names;
   popcorns.attribs.a_color.data = nameTags.attribs.a_color.data;
   updateMovie(pops, updatedRecords);
