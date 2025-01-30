@@ -8,6 +8,7 @@ class NameTags {
     this.u_texture = 1;
     this.fontInfo = fontInfo;
     this.nameTagOffset = [12, 8];
+    this.baseSize = 8;
 
     this.attribs = {
       a_position: { data: [] },
@@ -17,7 +18,7 @@ class NameTags {
     }
   }
 
-  generateTags(kernels) {
+  generateTags(kernels, generateColors) {
     const chars = { a_texcoord: [], a_worldOffset: [], a_color: [] };
     for (const kernel of kernels) {
       for (let i = 0; i < kernel.name.length; i++) {
@@ -28,14 +29,14 @@ class NameTags {
         const { a_texcoord, a_worldOffset } = this.generateTexData({i, ...this.fontInfo, ...item });
         chars.a_texcoord.push(a_texcoord);
         chars.a_worldOffset.push(a_worldOffset);
-        chars.a_color.push(kernel.tagColor);
+        if (generateColors) chars.a_color.push(kernel.tagColor);
       }
     }
 
     this.chars = chars;
     this.attribs.a_texcoord.data = chars.a_texcoord.flat();
     this.attribs.a_worldOffset.data = chars.a_worldOffset.flat();
-    this.attribs.a_color.data = chars.a_color.flat();
+    if (generateColors) this.attribs.a_color.data = chars.a_color.flat();
   }
 
   generateTexData(data) {
@@ -70,6 +71,13 @@ class NameTags {
         this.count++;
       }
     }
+  }
+
+  updateSize(kernels, setting) {
+    const pointSize = parseFloat(setting.replace("x", ""));
+    this.u_pointSize = this.baseSize * pointSize;
+    this.setOffset();
+    this.generateTags(kernels);
   }
 }
 
