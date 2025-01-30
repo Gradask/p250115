@@ -26,12 +26,18 @@
 }
 
 #button-container #settingsBtn {
-  font-size: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 40px;
   height: 40px;
-  line-height: 1; /* Prevents extra spacing */
   padding: 0;
+  background: rgba(46, 46, 57, 1);
+  border: none;
+  cursor: pointer;
+}
+
+#settingsBtn svg {
+  width: 24px;
+  height: 24px;
 }
