@@ -35,8 +35,3 @@
   line-height: 1; /* Prevents extra spacing */
   padding: 0;
 }
-
-#settingsBtn span {
-  position: relative;
-  top: -3px; /* Nudges only the cog upwards */
-}
