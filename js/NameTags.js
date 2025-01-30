@@ -77,8 +77,8 @@ class NameTags {
   setOffset() {
     const spriteSize = mode === "time" ? 32 : 16;
     this.nameTagOffset = [
-      (spriteSize + this.u_pointSize)/4,
-      (spriteSize + this.u_pointSize)/4,
+      (spriteSize + this.u_pointSize)/4 + 2,
+      (spriteSize + this.u_pointSize)/4 + 2,
     ]
   }
 
