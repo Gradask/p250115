@@ -46,7 +46,7 @@ class NameTags {
     const v1 = v / th;
   
     const extraOffset = this.u_pointSize === 16 ? 2 : 0;
-    const offsetX = extraOffset + i * this.u_pointSize * 0.64;
+    const offsetX = Math.round(extraOffset + i * this.u_pointSize * 0.64);
     const offsetY = extraOffset;
   
     return {
