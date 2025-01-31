@@ -1,11 +1,10 @@
 import { mode } from "./client.js";
 
 const predefinedColors = [
-  [255, 0, 0], // Red
-  [0, 150, 50], // Green
-  /* [255, 255, 0], */ // Yellow
-  [200, 100, 0], // Orange
-  [0, 100, 200], // Light blue
+  [175, 0, 0], // Red
+  [0, 110, 35], // Green
+  [140, 70, 0], // Brown
+  [0, 75, 150], // Blue
   [100, 0, 150], // Purple
   [255, 50, 255] // Pink
 ]
