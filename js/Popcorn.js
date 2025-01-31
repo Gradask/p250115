@@ -6,7 +6,6 @@ const predefinedColors = [
   [140, 70, 0], // Brown
   [0, 75, 150], // Blue
   [100, 0, 150], // Purple
-  [255, 50, 255] // Pink
 ]
 
 let colorIndex = 0;
