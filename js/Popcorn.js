@@ -61,8 +61,8 @@ class Popcorn {
     const size = mode === "time" ? 32 : 16;
     const scale = this.state === "kernel" ? 1 : 1.5;
     this.buffer = [
-      scale * size * 0.35, // x
-      scale * size * 0.35 // y
+      Math.round(scale * size * 0.35), // x
+      Math.round(scale * size * 0.35) // y
     ];
   }
 
