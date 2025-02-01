@@ -18,10 +18,17 @@ class NameTags {
   }
 
   generateTags(kernels, generateColors) {
+    this.sanitizedNames = {};
     const chars = { a_texcoord: [], a_worldOffset: [], a_color: [] };
+    
     for (const kernel of kernels) {
-      for (let i = 0; i < kernel.name.length; i++) {
-        const char = this.sanitizeString(kernel.name[i].toLowerCase());
+      const sanitized = "";
+      const name = kernel.name.toLowerCase();
+      for (let i = 0; i < name.length; i++) sanitized += this.sanitizeString(name[i]);
+      this.sanitizedNames[kernel.name] = sanitized;
+      
+      for (let i = 0; i < sanitized.length; i++) {
+        const char = sanitized[i];
         const item = this.fontInfo.items[char];
         if (!item) continue;
   
@@ -62,15 +69,18 @@ class NameTags {
     this.attribs.a_position.data = [];
     this.attribs.a_worldOffset.data = [];
     this.count = 0;
+    
     for (const popcorn of popcorns.all) {
       let [x, y, z] = popcorn.position;
       if (mode === "time" && !popcorn.blinkState) z += 10000;
-      for (let char of popcorn.name) {
-        const item = this.fontInfo.items[this.sanitizeString(char.toLowerCase())];
+      const absOffset = popcorn.buffer;
+      const sanitized = this.sanitizedNames[popcorn.name] || popcorn.name.toLowerCase();
+      
+      for (let char of sanitized) {
+        const item = this.fontInfo.items[char];
         if (!item) continue;
         this.attribs.a_position.data.push(x, y, z);
 
-        const absOffset = popcorn.buffer;
         const relOffset = this.relOffsets[this.count];
         this.attribs.a_worldOffset.data.push(
           absOffset[0] + relOffset[0], // x
