@@ -8,7 +8,6 @@ class NameTags {
     this.u_texture = 1;
     this.fontInfo = fontInfo;
     this.baseSize = 8;
-    //this.setOffset();
 
     this.attribs = {
       a_position: { data: [] },
@@ -87,8 +86,6 @@ class NameTags {
     const scaleFactor = parseFloat(setting.replace("x", ""));
     this.u_pointSize = this.baseSize * scaleFactor;
     this.u_texture = this.u_pointSize === 8 ? 1 : 2;
-    
-    //this.setOffset();
     this.generateTags(kernels);
   }
 }
