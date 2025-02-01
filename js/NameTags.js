@@ -22,7 +22,7 @@ class NameTags {
     const chars = { a_texcoord: [], a_worldOffset: [], a_color: [] };
     
     for (const kernel of kernels) {
-      const sanitized = "";
+      let sanitized = "";
       const name = kernel.name.toLowerCase();
       for (let i = 0; i < name.length; i++) sanitized += this.sanitizeString(name[i]);
       this.sanitizedNames[kernel.name] = sanitized;
