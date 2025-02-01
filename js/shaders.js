@@ -49,40 +49,40 @@ const tex = {
     uniform mat4 u_matrix;
     uniform float u_pointSize;
     uniform vec2 u_resolution;
+    uniform bool u_snapToPixel;
 
     out vec2 v_texcoord;
+    out vec2 v_worldOffset;
     out vec3 v_color;
 
-    out vec2 v_worldOffset;
-    out float v_pointSize;
-
     void main() {
-      // Transform position from model space -> clip space
-      vec4 worldPos = u_matrix * vec4(a_position/60.0, 1.0);
+      // Common transform (with /60.0 scaling)
+      vec4 basePosition = u_matrix * vec4(a_position / 60.0, 1.0);
 
-      // Convert clip space to [0..1], then to window coordinates
-      vec2 windowPos = (worldPos.xy / worldPos.w) * 0.5 + 0.5;
-      windowPos *= u_resolution;
+      if (a_worldOffset.x > 0.0) {
+        // Convert clip space -> window coords
+        vec2 windowPos = (basePosition.xy / basePosition.w) * 0.5 + 0.5;
+        windowPos *= u_resolution;
 
-      // Add your per-glyph offset (in pixels) here
-      windowPos += a_worldOffset;
+        // Add your per-glyph offset in pixel space
+        windowPos += a_worldOffset;
 
-      // Snap to nearest integer
-      windowPos = floor(windowPos + 0.5);
+        // Snap to nearest pixel
+        windowPos = floor(windowPos + 0.5);
 
-      // Convert back to clip space
-      vec2 snappedNDC = (windowPos / u_resolution - 0.5) * 2.0;
-      gl_Position = vec4(snappedNDC * worldPos.w, worldPos.z, worldPos.w);
+        // Convert back to clip space
+        vec2 snappedNDC = (windowPos / u_resolution - 0.5) * 2.0;
+        gl_Position = vec4(snappedNDC * basePosition.w, basePosition.z, basePosition.w);
+      } else {
+        vec2 offsetInClipSpace = (a_worldOffset / u_resolution) * 2.0 * basePosition.w;
+        gl_Position = basePosition + vec4(offsetInClipSpace, 0.0, 0.0);
+      }
 
-      // Set the point size
+      // Set point size and pass through the rest
       gl_PointSize = u_pointSize;
-
-      // Pass through color and texcoord
-      v_color = a_color;
       v_texcoord = a_texcoord;
-
+      v_color = a_color;
       v_worldOffset = a_worldOffset;
-      v_pointSize = u_pointSize;
     }`,
   fs: `#version 300 es
     precision mediump float;
