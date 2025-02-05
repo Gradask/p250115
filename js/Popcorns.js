@@ -143,6 +143,7 @@ class Popcorns {
   }
 
   updatePopcorns(deltaTime) {
+    const gravityDelta = 9.81 * deltaTime * 0.001;
     for (const popcorn of this.popcorns) {
       if (mode === "time" && popcorn.state === "popped") {
         if (popcorn.blink) {
@@ -167,7 +168,7 @@ class Popcorns {
 
       if (popcorn.state === "popped") continue;
     
-      popcorn.velocity[2] -= 9.81 * deltaTime * 0.001; // Apply gravity
+      popcorn.velocity[2] -= gravityDelta; // Apply gravity
       
       // Predict and check for collisions with cylinder
       if (popcorn.position[2] <= this.saucepanHeight) {
