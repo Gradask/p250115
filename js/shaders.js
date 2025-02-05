@@ -100,11 +100,12 @@ const tex = {
       
       vec4 texColor = texture(u_texture, uv);
       
-      // Optional: Discard transparent fragments for correct blending
-      if (texColor.a < 0.1) discard;
-
       fragColor = texColor;
-      if (v_worldOffset.x > 0.0) fragColor = vec4(v_color, 1.0);
+
+      if (v_worldOffset.x > 0.0) {
+        texColor.rgb *= v_color * texColor.a;
+        fragColor = texColor;
+      }
     }`,
   attribs: {
     a_position: {
@@ -196,8 +197,6 @@ const mesh = {
     in vec3 v_lightDirection;
 
     uniform sampler2D u_normalTexture;
-    uniform float u_metallicFactor;
-    uniform float u_roughnessFactor;
 
     out vec4 outColor;
 
@@ -211,18 +210,16 @@ const mesh = {
       vec3 adjustedNormalMap = normalMap * normalScale;
 
       // Combine and normalize the normals
-      vec3 normal = normalize(v_normal + adjustedNormalMap);
-
-      // Transform light direction into the same space as the normals
-      vec3 transformedLightDirection = normalize(v_lightDirection);
+      //vec3 normal = normalize(v_normal + adjustedNormalMap);
+      vec3 normal = normalize(mix(v_normal, adjustedNormalMap, 0.5)); 
 
       // Compute diffuse lighting
-      float diffuse = max(dot(normal, transformedLightDirection), 0.0);
-      diffuse = mix(0.1, diffuse * 0.9, 0.5); // Soften gradients
+      float diffuse = max(dot(normal, v_lightDirection), 0.0);
+      diffuse = mix(0.1, diffuse * 0.7, 0.5); // Soften gradients
 
       // Adjust specular highlights
       float reflectance = mix(0.04, 1.0, max(0.8, 0.2));
-      vec3 specular = vec3(reflectance) * pow(diffuse, 8.0); // Lower exponent for softer highlights
+      vec3 specular = vec3(reflectance) * (diffuse * diffuse); // Lower exponent for softer highlights
 
       // Add ambient lighting
       vec3 ambient = vec3(0.4); // Slightly increased
@@ -267,12 +264,6 @@ const mesh = {
     },
     u_normalTexture: {
       method: "uniform1i"
-    },
-    u_metallicFactor: {
-      method: "uniform1f"
-    },
-    u_roughnessFactor: {
-      method: "uniform1f"
     },
     u_lightDirection: {
       method: "uniform3fv"
