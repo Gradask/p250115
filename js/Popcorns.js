@@ -205,44 +205,41 @@ class Popcorns {
   }
 
   checkCollision(popcorn, deltaTime) {
-    const radialDistance = Math.sqrt(popcorn.position[0] ** 2 + popcorn.position[1] ** 2);
-  
-    // Predict next position
+    const rSquared = popcorn.position[0] ** 2 + popcorn.position[1] ** 2;
     const nextPosition = [
       popcorn.position[0] + popcorn.velocity[0] * deltaTime,
       popcorn.position[1] + popcorn.velocity[1] * deltaTime,
       popcorn.position[2] + popcorn.velocity[2] * deltaTime,
     ];
-
-    const nextRadialDistance = Math.sqrt(nextPosition[0] ** 2 + nextPosition[1] ** 2);
+    const nextRSquared = nextPosition[0] ** 2 + nextPosition[1] ** 2;
   
-    // Check if trajectory crosses the wall
-    if (radialDistance <= this.saucepanRadius && nextRadialDistance > this.saucepanRadius && popcorn.position[2] <= this.saucepanHeight) {
-      // Calculate intersection point
+    if (rSquared <= this.saucepanRadius ** 2 && nextRSquared > this.saucepanRadius ** 2 && popcorn.position[2] <= this.saucepanHeight) {
+      const radialDistance = Math.sqrt(rSquared);
       const dx = nextPosition[0] - popcorn.position[0];
       const dy = nextPosition[1] - popcorn.position[1];
       const dz = nextPosition[2] - popcorn.position[2];
+      const movementDistance = Math.sqrt(dx ** 2 + dy ** 2);
   
-      const t = (this.saucepanRadius - radialDistance) / Math.sqrt(dx ** 2 + dy ** 2); // Ratio of movement toward the wall
-      const collisionPoint = [
-        popcorn.position[0] + dx * t,
-        popcorn.position[1] + dy * t,
-        popcorn.position[2] + dz * t,
-      ];
+      if (movementDistance > 0) {
+        const t = (this.saucepanRadius - radialDistance) / movementDistance;
+        const collisionPoint = [
+          popcorn.position[0] + dx * t,
+          popcorn.position[1] + dy * t,
+          popcorn.position[2] + dz * t,
+        ];
   
-      // Reflect velocity along the wall's normal
-      const normal = [
-        collisionPoint[0] / this.saucepanRadius,
-        collisionPoint[1] / this.saucepanRadius,
-        0, // Horizontal
-      ];
-      const velocityDotNormal = mat4helpers.dot(popcorn.velocity, normal);
-      popcorn.velocity[0] -= 2 * velocityDotNormal * normal[0];
-      popcorn.velocity[1] -= 2 * velocityDotNormal * normal[1];
+        const normal = [
+          collisionPoint[0] / this.saucepanRadius,
+          collisionPoint[1] / this.saucepanRadius,
+          0,
+        ];
+        const velocityDotNormal = mat4helpers.dot(popcorn.velocity, normal);
+        popcorn.velocity[0] -= 2 * velocityDotNormal * normal[0];
+        popcorn.velocity[1] -= 2 * velocityDotNormal * normal[1];
   
-      // Adjust position to the wall boundary
-      popcorn.position[0] = normal[0] * this.saucepanRadius;
-      popcorn.position[1] = normal[1] * this.saucepanRadius;
+        popcorn.position[0] = normal[0] * this.saucepanRadius;
+        popcorn.position[1] = normal[1] * this.saucepanRadius;
+      }
     }
   }
 
