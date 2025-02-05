@@ -17,6 +17,7 @@ class Popcorns {
     this.maxDeltaTime = 67; // ~15 fps
     
     // Physics
+    this.gravity = 9.81 * 0.001;
     this.saucepanRadius = 170;
     this.saucepanHeight = 143;
     this.PPI = PPI; // pixels per inch
@@ -143,7 +144,8 @@ class Popcorns {
   }
 
   updatePopcorns(deltaTime) {
-    const gravityDelta = 9.81 * deltaTime * 0.001;
+    const gravityDelta = this.gravity * deltaTime;
+    
     for (const popcorn of this.popcorns) {
       if (mode === "time" && popcorn.state === "popped") {
         if (popcorn.blink) {
