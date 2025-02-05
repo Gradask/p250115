@@ -23,8 +23,12 @@ const meshProgram = glhelpers.createProgram(gl, mesh.vs, mesh.fs);
 const meshRenderer = new MeshRenderer(gl, meshProgram, mesh);
 
 function render() {
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  gl.depthMask(true);
   gl.disable(gl.DEPTH_TEST);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
   if (mode === "distance" && target.isReady) basicRenderer.render(target);
   gl.enable(gl.CULL_FACE);
   if (bottomPlate.isReady) meshRenderer.render(bottomPlate);
@@ -33,6 +37,7 @@ function render() {
   if (popcorns.all.length > 0) {
     popcorns.updateRenderables();
     nameTags.updateRenderables(popcorns);
+    gl.depthMask(false);
     texRenderer.render(popcorns);
     gl.disable(gl.DEPTH_TEST);
     texRenderer.render(nameTags);
