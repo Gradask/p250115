@@ -119,7 +119,7 @@ class Popcorns {
   }
 
   update(time) {
-    let deltaTime = (time - this.lastTime) || 16.7;
+    let deltaTime = (time - this.lastTime) || this.baselineDeltaTime;
     deltaTime = deltaTime > this.maxDeltaTime ? this.maxDeltaTime : deltaTime; // Cap deltaTime to a reasonable max value
     const timeScale = deltaTime / this.baselineDeltaTime;
   
