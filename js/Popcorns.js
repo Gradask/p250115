@@ -107,17 +107,17 @@ class Popcorns {
   }
 
   updateRenderables() {
-    this.attribs.a_position.data = [];
-    this.attribs.a_texcoord.data = [];
+    const posData = this.attribs.a_position.data = [];
+    const texData = this.attribs.a_texcoord.data = [];
 
-    for (const popcorn of this.all) {
+    for (let i = 0, len = this.all.length; i < len; i++) {
+      const popcorn = this.all[i];
       if (mode === "distance" || popcorn.blinkState) {
-        this.attribs.a_position.data.push(...popcorn.position);
-        this.attribs.a_texcoord.data.push(...popcorn.a_texcoord);
+        posData.push(...popcorn.position);
+        texData.push(...popcorn.a_texcoord);
       }
     }
-
-    this.count = this.attribs.a_position.data.length/3;
+    this.count = posData.length / 3;
   }
 
   update(time) {
