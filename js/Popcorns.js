@@ -37,9 +37,10 @@ class Popcorns {
     }
 
     // Sound effect
-    this.popSound = new Audio("audio/pop.wav");
     this.maxConcurrentPops = 10;
     this.activePops = 0;
+    this.popSounds = Array.from({ length: this.maxConcurrentPops }, () => new Audio("audio/pop.wav"));
+    this.soundIndex = 0;
 
     this.modes = modes;
   }
@@ -263,16 +264,14 @@ class Popcorns {
 
   playPop() {
     if (this.activePops < this.maxConcurrentPops) {
-      const newSound = this.popSound.cloneNode();
-      newSound.volume = 1;
+      const sound = this.popSounds[this.soundIndex];
+      sound.currentTime = 0;
+      sound.play();
+      
+      this.soundIndex = (this.soundIndex + 1) % this.popSounds.length;
       this.activePops++;
-      newSound.play();
-  
-      // Cleanup
-      newSound.onended = () => {
-        this.activePops--;
-        newSound.remove();
-      };
+      
+      sound.onended = () => this.activePops--;
     }
   }
 }
