@@ -199,7 +199,6 @@ const init = () => {
 
     if (texRenderer.isReady && saucepan.isDirty && bottomPlate.isDirty) {
       shouldRender = true;
-      saucepan.isDirty = bottomPlate.isDirty = false;
     }
   
     if (isRunning || shouldRender) render(time);
