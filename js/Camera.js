@@ -46,6 +46,7 @@ class Camera {
     this.vMat = mat4helpers.lookAt(this.position, this.tgt, this.up);
     this.pMat = mat4helpers.perspective(fov, aspect, this.near, this.far);
     this.vpMat = mat4helpers.multiply(this.pMat, this.vMat);
+    this.isDirty = true;
   }
 }
 
