@@ -10,6 +10,7 @@ class Target {
     this.a_color = [];
     this.generateRings();
     this.isReady = true;
+    this.isDirty = true;
   }
 
   generateRings() {
