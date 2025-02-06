@@ -43,6 +43,7 @@ class Popcorns {
     this.soundIndex = 0;
 
     this.modes = modes;
+    this.isDirty = true;
   }
 
   reset() {
