@@ -42,11 +42,15 @@ class TexRenderer {
 
     glhelpers.setupBuffers(gl, this.programInfo.attribs, drawInfo)
 
-    drawInfo.u_matrix = camera.vpMat;
-    drawInfo.u_resolution = [camera.width, camera.height];
+    if (camera.isDirty || drawInfo.isDirty) {
+      drawInfo.u_matrix = camera.vpMat;
+      drawInfo.u_resolution = [camera.width, camera.height];
+    }
+    
     glhelpers.setupUniforms(gl, this.programInfo.uniforms, drawInfo);
 
     gl.drawArrays(gl.POINTS, 0, drawInfo.count);
+    drawInfo.isDirty = false;
   }
 }
 
