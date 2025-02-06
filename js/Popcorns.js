@@ -140,7 +140,7 @@ class Popcorns {
       const popcorn = this.kernels.shift();
       popcorn.pop(this.elapsedTime);
       this.popcorns.push(popcorn);
-      this.playPop();
+      //this.playPop();
       if (mode === "time") this.updateTimeResults();
     }
   }
