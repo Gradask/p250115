@@ -14,11 +14,15 @@ class BasicRenderer {
     const gl = this.gl;
     gl.useProgram(this.program);
     glhelpers.setupBuffers(gl, this.programInfo.attribs, drawInfo);
-    drawInfo.u_matrix = camera.vpMat;
+    if (camera.isDirty || drawInfo.isDirty) {
+      drawInfo.u_matrix = camera.vpMat;
+      drawInfo.count = drawInfo.attribs.a_position.data.length/3;
+    }
+    
     glhelpers.setupUniforms(gl, this.programInfo.uniforms, drawInfo);
-
-    const count = drawInfo.attribs.a_position.data.length/3;
-    gl.drawArrays(gl.TRIANGLES, 0, count);
+    
+    gl.drawArrays(gl.TRIANGLES, 0, drawInfo.count);
+    drawInfo.isDirty = false;
   }
 }
 
