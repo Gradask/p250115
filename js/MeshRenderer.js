@@ -46,6 +46,7 @@ class MeshRenderer {
     );
 
     drawInfo.isDirty = false;
+  }
 }
 
 export default MeshRenderer;
