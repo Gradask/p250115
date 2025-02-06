@@ -42,6 +42,7 @@ function render() {
     gl.disable(gl.DEPTH_TEST);
     texRenderer.render(nameTags);
   }
+  camera.isDirty = false;
 }
 
 window.addEventListener("resize", () => {
