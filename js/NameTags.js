@@ -15,6 +15,7 @@ class NameTags {
       a_texcoord: {},
       a_worldOffset: {}
     }
+    this.isDirty = true;
   }
 
   generateTags(kernels, generateColors) {
