@@ -59,10 +59,10 @@ class Popcorns {
 
   resetPopcorns() {
     this.popcorns = [...this.all];
-    //this.shuffleArray(this.popcorns);
+    this.shuffleArray(this.popcorns);
     for (const popcorn of this.popcorns) popcorn.reset(this.maxTime, this.elapsedTime);
-    //this.all.sort((a, b) => a.popTime - b.popTime);
-    //this.addSuspense();
+    this.popcorns.sort((a, b) => a.popTime - b.popTime);
+    this.addSuspense();
     this.kernelCount = this.all.length;
     this.stoppedCount = 0;
     this.disappearedCount = 0;
