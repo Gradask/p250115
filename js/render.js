@@ -35,8 +35,6 @@ function render() {
   gl.enable(gl.DEPTH_TEST);
   if (saucepan.isReady) meshRenderer.render(saucepan);
   if (popcorns.all.length > 0) {
-    popcorns.updateRenderables();
-    nameTags.updateRenderables(popcorns);
     gl.depthMask(false);
     texRenderer.render(popcorns);
     gl.disable(gl.DEPTH_TEST);
