@@ -59,9 +59,8 @@ class Popcorns {
 
   resetPopcorns() {
     this.popcorns = [...this.all];
-    this.shuffleArray(this.popcorns);
-    for (const popcorn of this.popcorns) popcorn.reset(this.maxTime, this.elapsedTime);
-    this.popcorns.sort((a, b) => a.popTime - b.popTime);
+    this.shuffleArray(this.all);
+    for (const popcorn of this.all) popcorn.reset(this.maxTime, this.elapsedTime);
     this.addSuspense();
     this.kernelCount = this.all.length;
     this.stoppedCount = 0;
@@ -99,6 +98,7 @@ class Popcorns {
 
   addSuspense() {
     // Spread out top 3 for increased suspense
+    this.all.sort((a, b) => a.popTime - b.popTime);
     const last = this.all[this.all.length - 1];
     const secondToLast = this.all[this.all.length - 2];
     const scaleFactor = this.maxTime/60; // 0.1, 0.5, 1, 2, 10
