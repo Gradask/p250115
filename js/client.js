@@ -8,8 +8,6 @@ import Popcorn from './Popcorn.js';
 import Mode from './Mode.js';
 import Target from './Target.js';
 
-console.log("hey, listen!")
-
 const modes = {
   time: new Mode("time"),
   distance: new Mode("distance")
@@ -91,14 +89,15 @@ const init = () => {
     if (mode !== "time") {
       camera.time();
       camera.getMat();
-      shouldRender = true;
       mode = "time";
       popcorns.switchMode("time");
       popcorns.reset();
+      nameTags.resetRenderables(popcorns);
       select(timeBtn);
       deselect(distanceBtn);
       deselect(startBtn);
       pause();
+      shouldRender = true;
     }
   });
 
@@ -106,14 +105,15 @@ const init = () => {
     if (mode !== "distance") {
       camera.distance();
       camera.getMat();
-      shouldRender = true;
       mode = "distance";
       popcorns.switchMode("distance");
       popcorns.reset();
+      nameTags.resetRenderables(popcorns);
       select(distanceBtn);
       deselect(timeBtn);
       deselect(startBtn);
       pause();
+      shouldRender = true;
     }
   });
 
@@ -156,7 +156,7 @@ const init = () => {
       if (group.classList.contains("time-options")) {
         popcorns.updateMaxTime(setting);
       } else if (group.classList.contains("font-options")) {
-        nameTags.updateSize(pops, setting);
+        nameTags.updateSize(pops, setting, popcorns);
         shouldRender = true;
       }
     }
@@ -182,12 +182,15 @@ const init = () => {
   
   const loop = (time) => {
     if (isRunning && popcorns.all.length > 0) {
-      popcorns.update(time);
+      popcorns.update(time, nameTags);
 
       if (!modes[mode].isRunning) {
         if (showResults) {
           winnerNameElement.textContent = modes[mode].winner.name;
           movieNameElement.textContent = modes[mode].winner.movie;
+          if (!modes[mode].winner || modes[mode].winner.name) {
+            console.log("winner error", modes[mode], popcorns);
+          }
           show(resultsContainer);
           showResults = false;
           isRunning = false;
@@ -248,10 +251,11 @@ function handleInput() {
 
   pops.length = 0;
   pops.push(...newPops);
+  
   popcorns.generateKernels(pops);
   nameTags.generateTags(pops, true);
+  nameTags.resetRenderables(popcorns)
   records = names;
-  popcorns.attribs.a_color.data = nameTags.attribs.a_color.data;
   updateMovie(pops, updatedRecords);
   shouldRender = true;
 }
