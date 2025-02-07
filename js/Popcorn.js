@@ -51,8 +51,12 @@ class Popcorn {
   }
 
   stop() {
-    this.state = "popped";
+    this.state = "stopped";
     this.getRadialDistance();
+  }
+
+  disappear() {
+    this.state = "disappeared";
   }
 
   getBuffer() {
@@ -70,9 +74,9 @@ class Popcorn {
   
   getPopcornSprite() {
     const texcoords = [
-        [0.4, 0.25],    // Sprite 2 
-        [0.6, 0.25],    // Sprite 3
-        [0.2, 0.25]     // Sprite 4
+        [0.4, 0.25],    // Sprite 1 
+        [0.6, 0.25],    // Sprite 2
+        [0.2, 0.25]     // Sprite 3
     ];
     const coords = texcoords[spriteIndex];
     spriteIndex = (spriteIndex + 1) % texcoords.length;
