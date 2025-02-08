@@ -191,7 +191,7 @@ class Popcorns {
   updateKernel(kernel) {
     if (kernel.popTime <= this.kernelTime) {
       kernel.pop(this.elapsedTime);
-      this.playPop();
+      //this.playPop();
       this.kernelCount--;
     }
   }
