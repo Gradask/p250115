@@ -248,9 +248,8 @@ class Popcorns {
   }
 
   updateTimeResults() {
-    this.modes.time.winner = this.popcorns.find(p => p.state !== "disappeared");
+    this.modes.time.winner = this.all[this.all.length - 1];
     this.modes.time.stop();
-    console.log("this.modes.time.winner", this.modes.time.winner)
   }
 
   updateDistanceResults() {
