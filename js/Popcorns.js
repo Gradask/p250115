@@ -173,6 +173,7 @@ class Popcorns {
       this.updateRenderables(popcorn);
       nameTags.updateRenderables(popcorn);
     }
+    console.log("count", this.count)
   }
 
   emptyRenderables() {
@@ -211,7 +212,6 @@ class Popcorns {
     this.attribs.a_texcoord.isDirty = true;
 
     this.count++;
-    console.log("count", this.count)
   }
 
   updateKernel(kernel) {
