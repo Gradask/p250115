@@ -164,14 +164,12 @@ class Popcorns {
         if (this.updateResults) this.updateDistanceResults();
       }
     }
-    console.log("this.popcornsToDraw.length", this.popcornsToDraw.length)
+    
     for (let i = 0; i < this.popcornsToDraw.length; i++) {
-      
       const popcorn = this.popcornsToDraw[i];
       this.updateRenderables(popcorn);
       nameTags.updateRenderables(popcorn);
     }
-    console.log("count", this.count)
   }
 
   emptyRenderables() {
