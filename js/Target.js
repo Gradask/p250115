@@ -9,6 +9,8 @@ class Target {
     this.a_position = [];
     this.a_color = [];
     this.generateRings();
+    this.attribs.a_position.isDirty = true;
+    this.attribs.a_color.isDirty = true;
     this.isReady = true;
     this.isDirty = true;
   }
