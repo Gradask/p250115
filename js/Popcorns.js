@@ -158,7 +158,6 @@ class Popcorns {
           this.updateKernel(popcorn);
           this.updateRenderables(popcorn);
           nameTags.updateRenderables(popcorn);
-          if (this.updateResults) this.updateDistanceResults();
           continue;
         } else if (popcorn.state === "popping") {
           this.updatePopping(popcorn, timeScale, deltaGravity);
@@ -167,8 +166,9 @@ class Popcorns {
         if (this.updateResults) this.updateDistanceResults();
       }
     }
-    
+    console.log("this.popcornsToDraw.length", this.popcornsToDraw.length)
     for (let i = 0; i < this.popcornsToDraw.length; i++) {
+      
       const popcorn = this.popcornsToDraw[i];
       this.updateRenderables(popcorn);
       nameTags.updateRenderables(popcorn);
