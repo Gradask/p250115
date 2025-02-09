@@ -308,7 +308,7 @@ class Popcorns {
         popcorn.position[0] = normal[0] * this.saucepanRadius;
         popcorn.position[1] = normal[1] * this.saucepanRadius;
       }
-    } else if (rSquared > this.saucepanRadius) {
+    } else if (rSquared > this.saucepanRadius ** 2) {
       popcorn.isInside = false;
     }
   }
