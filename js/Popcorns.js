@@ -5,6 +5,8 @@ class Popcorns {
   constructor(position, pointSize, texSize, PPI, modes) {
     this.all = [];
     this.popcorns = [];
+    this.kernelsToDraw = [];
+    this.popcornsToDraw = [];
 
     // Time
     this.maxTime = 60;
@@ -128,6 +130,8 @@ class Popcorns {
 
     this.emptyRenderables();
     nameTags.emptyRenderables();
+    this.kernelsToDraw.length = 0;
+    this.popcornsToDraw.length = 0;
 
     for (let i = 0; i < this.popcorns.length; i++) {
       const popcorn = this.popcorns[i];
@@ -137,19 +141,25 @@ class Popcorns {
           continue;
         } else if (popcorn.state === "kernel") {
           if (this.kernelCount > 1) this.updateKernel(popcorn);
+          this.kernelsToDraw.push(popcorn);
+          continue;
         } else if (popcorn.state === "popping") {
           this.updatePopping(popcorn, timeScale, deltaGravity);
         } else if (popcorn.state === "stopped") {
           this.updateStopped(popcorn);
           if (!popcorn.blinkState) continue;
         }
+        this.popcornsToDraw.push(popcorn);
         if (this.updateResults) this.updateTimeResults();
       } else {
         if (popcorn.state === "kernel") {
           this.updateKernel(popcorn);
+          this.kernelsToDraw.push(popcorn);
+          continue;
         } else if (popcorn.state === "popping") {
           this.updatePopping(popcorn, timeScale, deltaGravity);
         }
+        this.popcornsToDraw.push(popcorn);
         if (this.updateResults) this.updateDistanceResults();
       }
 
@@ -157,12 +167,16 @@ class Popcorns {
       nameTags.updateRenderables(popcorn);
     }
 
-    if (mode === "time" && this.disappearedCount === this.all.length - 1) {
-      this.updateTimeResults();
+    for (let i = 0; i < this.kernelsToDraw.length; i++) {
+      const popcorn = this.kernelsToDraw[i];
+      this.updateRenderables(popcorn);
+      nameTags.updateRenderables(popcorn);
     }
 
-    if (mode === "distance" && this.stoppedCount === this.all.length) {
-      this.updateDistanceResults();
+    for (let i = 0; i < this.popcornsToDraw.length; i++) {
+      const popcorn = this.popcornsToDraw[i];
+      this.updateRenderables(popcorn);
+      nameTags.updateRenderables(popcorn);
     }
   }
 
