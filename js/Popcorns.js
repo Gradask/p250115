@@ -211,6 +211,7 @@ class Popcorns {
     this.attribs.a_texcoord.isDirty = true;
 
     this.count++;
+    console.log("count", this.count)
   }
 
   updateKernel(kernel) {
