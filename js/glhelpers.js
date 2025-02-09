@@ -36,11 +36,16 @@ const glhelpers = {
     for (const attribId in drawInfo.attribs) {
       const attrib = drawInfo.attribs[attribId];
       const info = attribInfos[attribId];
+  
+      if (!attrib.buffer) attrib.buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, attrib.buffer);
 
-      const buffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-      const data = info.type === "FLOAT" ? new Float32Array(attrib.data) : new Uint8Array(attrib.data)
-      gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+      if (attrib.isDirty) {
+        const data = info.type === "FLOAT" ? new Float32Array(attrib.data) : new Uint8Array(attrib.data);
+        gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+        attrib.isDirty = false;
+      }
+  
       gl.enableVertexAttribArray(info.loc);
       gl.vertexAttribPointer(
         info.loc,
