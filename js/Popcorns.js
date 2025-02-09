@@ -279,8 +279,9 @@ class Popcorns {
   }
 
   updateDistanceResults() {
-    this.popcorns.sort((a, b) => b.radialDistance - a.radialDistance);
-    this.modes.distance.winner = this.popcorns[0];
+    let final = [...this.popcorns];
+    final.sort((a, b) => b.radialDistance - a.radialDistance);
+    this.modes.distance.winner = final[0];
     this.modes.distance.stop();
   }
 
