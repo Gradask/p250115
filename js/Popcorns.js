@@ -141,10 +141,13 @@ class Popcorns {
           if (this.kernelCount > 1) this.updateKernel(popcorn);
           this.updateRenderables(popcorn);
           nameTags.updateRenderables(popcorn);
+          if (this.updateResults) this.updateTimeResults();
           continue;
         } else if (popcorn.state === "popping") {
+          this.popcornsToDraw.push(popcorn);
           this.updatePopping(popcorn, timeScale, deltaGravity);
         } else if (popcorn.state === "stopped") {
+          
           this.updateStopped(popcorn);
           if (!popcorn.blinkState) continue;
         }
@@ -155,6 +158,7 @@ class Popcorns {
           this.updateKernel(popcorn);
           this.updateRenderables(popcorn);
           nameTags.updateRenderables(popcorn);
+          if (this.updateResults) this.updateDistanceResults();
           continue;
         } else if (popcorn.state === "popping") {
           this.updatePopping(popcorn, timeScale, deltaGravity);
