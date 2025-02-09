@@ -144,10 +144,8 @@ class Popcorns {
           if (this.updateResults) this.updateTimeResults();
           continue;
         } else if (popcorn.state === "popping") {
-          this.popcornsToDraw.push(popcorn);
           this.updatePopping(popcorn, timeScale, deltaGravity);
         } else if (popcorn.state === "stopped") {
-          
           this.updateStopped(popcorn);
           if (!popcorn.blinkState) continue;
         }
