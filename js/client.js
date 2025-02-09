@@ -188,7 +188,7 @@ const init = () => {
         if (showResults) {
           winnerNameElement.textContent = modes[mode].winner.name;
           movieNameElement.textContent = modes[mode].winner.movie;
-          if (!modes[mode].winner || modes[mode].winner.name) {
+          if (!modes[mode].winner || !modes[mode].winner.name) {
             console.log("winner error", modes[mode], popcorns);
           }
           show(resultsContainer);
