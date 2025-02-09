@@ -43,6 +43,7 @@ class Popcorns {
 
     this.modes = modes;
     this.isDirty = true;
+    this.updateResults = false;
   }
 
   reset() {
@@ -75,6 +76,7 @@ class Popcorns {
   
   resetModes() {
     for (const mode in this.modes) this.modes[mode].reset();
+    this.updateResults = false;
   }
 
   resetRenderables() {
@@ -130,15 +132,25 @@ class Popcorns {
     for (let i = 0; i < this.popcorns.length; i++) {
       const popcorn = this.popcorns[i];
 
-      if (popcorn.state === "kernel") {
-        if (mode === "distance" || this.kernelCount > 1) this.updateKernel(popcorn);
-      } else if (popcorn.state === "popping") {
-        this.updatePopping(popcorn, timeScale, deltaGravity);
-      } else if (popcorn.state === "stopped" && mode === "time") {
-        this.updateStopped(popcorn);
-        if (!popcorn.blinkState) continue;
-      } else if (popcorn.state === "disappeared") {
-        continue;
+      if (mode === "time") {
+        if (popcorn.state === "disappeared") {
+          continue;
+        } else if (popcorn.state === "kernel") {
+          if (this.kernelCount > 1) this.updateKernel(popcorn);
+        } else if (popcorn.state === "popping") {
+          this.updatePopping(popcorn, timeScale, deltaGravity);
+        } else if (popcorn.state === "stopped") {
+          this.updateStopped(popcorn);
+          if (!popcorn.blinkState) continue;
+        }
+        if (this.updateResults) this.updateTimeResults();
+      } else {
+        if (popcorn.state === "kernel") {
+          this.updateKernel(popcorn);
+        } else if (popcorn.state === "popping") {
+          this.updatePopping(popcorn, timeScale, deltaGravity);
+        }
+        if (this.updateResults) this.updateDistanceResults();
       }
 
       this.updateRenderables(popcorn);
@@ -226,6 +238,7 @@ class Popcorns {
       if (popcorn.velocity[0] === 0 && popcorn.velocity[1] === 0) {
         popcorn.stop();
         this.stoppedCount++;
+        if (mode === "distance" && this.stoppedCount === this.all.length) this.updateResults = true;
       }
     }
   }
@@ -241,6 +254,7 @@ class Popcorns {
         popcorn.blinkState = false;
         popcorn.disappear();
         this.disappearedCount++;
+        if (this.disappearedCount === this.all.length - 1) this.updateResults = true;
       }
     } else {
       popcorn.blinkState = true;
