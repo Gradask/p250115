@@ -105,22 +105,26 @@ class NameTags {
         popcorn.position[1],
         popcorn.position[2]
       );
+      this.attribs.a_position.isDirty = true;
 
       this.attribs.a_worldOffset.data.push(
         popcorn.buffer[0] + popcorn.relTagOffsets[j][0],
         popcorn.buffer[1] + popcorn.relTagOffsets[j][1],
       );
+      this.attribs.a_worldOffset.isDirty = true;
       
       this.attribs.a_color.data.push(
         popcorn.tagColor[0],
         popcorn.tagColor[1],
         popcorn.tagColor[2]
       );
+      this.attribs.a_color.isDirty = true;
 
       this.attribs.a_texcoord.data.push(
         popcorn.tagCoords[j][0],
         popcorn.tagCoords[j][1]
       );
+      this.attribs.a_texcoord.isDirty = true;
 
       this.count++;
     }
