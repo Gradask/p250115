@@ -35,6 +35,7 @@ class Popcorn {
     this.blink = true;
     this.blinkState = true;
     this.startBlinkTime = null;
+    this.isInside = true;
 
     this.startTime = null;
     this.hasBeenInTheLead = null;
