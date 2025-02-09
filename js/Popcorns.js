@@ -212,7 +212,7 @@ class Popcorns {
     popcorn.velocity[2] -= deltaGravity; // Apply gravity
       
     // Predict and check for collisions with cylinder
-    if (popcorn.position[2] <= this.saucepanHeight) {
+    if (popcorn.isInside && popcorn.position[2] <= this.saucepanHeight) {
       this.checkCollision(popcorn, deltaTime);
     }
 
@@ -308,6 +308,8 @@ class Popcorns {
         popcorn.position[0] = normal[0] * this.saucepanRadius;
         popcorn.position[1] = normal[1] * this.saucepanRadius;
       }
+    } else if (rSquared > this.saucepanRadius) {
+      popcorn.isInside = false;
     }
   }
 
