@@ -179,23 +179,27 @@ class Popcorns {
       popcorn.worldOffset[0],
       popcorn.worldOffset[1]
     );
+    this.attribs.a_worldOffset.isDirty = true;
 
     this.attribs.a_color.data.push(
       popcorn.color[0],
       popcorn.color[1],
       popcorn.color[2],
     );
+    this.attribs.a_color.isDirty = true;
 
     this.attribs.a_position.data.push(
       popcorn.position[0],
       popcorn.position[1],
       popcorn.position[2]
     );
+    this.attribs.a_position.isDirty = true;
 
     this.attribs.a_texcoord.data.push(
       popcorn.a_texcoord[0],
       popcorn.a_texcoord[1]
     );
+    this.attribs.a_texcoord.isDirty = true;
 
     this.count++;
   }
