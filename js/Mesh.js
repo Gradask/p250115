@@ -27,8 +27,11 @@ class Mesh {
 
     this.meshIdx = mesh.meshIdx;
     this.attribs.a_normal.data = this.primitives.NORMAL;
+    this.attribs.a_normal.isDirty = true;
     this.attribs.a_position.data = this.primitives.POSITION;
+    this.attribs.a_position.isDirty = true;
     this.attribs.a_texcoord.data = this.primitives.TEXCOORD_0;
+    this.attribs.a_texcoord.isDirty = true;
     this.indices = this.primitives.indices;
     this.materials = data.materials;
     
