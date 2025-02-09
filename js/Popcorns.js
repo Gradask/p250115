@@ -5,7 +5,6 @@ class Popcorns {
   constructor(position, pointSize, texSize, PPI, modes) {
     this.all = [];
     this.popcorns = [];
-    this.kernelsToDraw = [];
     this.popcornsToDraw = [];
 
     // Time
@@ -130,7 +129,6 @@ class Popcorns {
 
     this.emptyRenderables();
     nameTags.emptyRenderables();
-    this.kernelsToDraw.length = 0;
     this.popcornsToDraw.length = 0;
 
     for (let i = 0; i < this.popcorns.length; i++) {
@@ -141,7 +139,8 @@ class Popcorns {
           continue;
         } else if (popcorn.state === "kernel") {
           if (this.kernelCount > 1) this.updateKernel(popcorn);
-          this.kernelsToDraw.push(popcorn);
+          this.updateRenderables(popcorn);
+          nameTags.updateRenderables(popcorn);
           continue;
         } else if (popcorn.state === "popping") {
           this.updatePopping(popcorn, timeScale, deltaGravity);
@@ -154,7 +153,8 @@ class Popcorns {
       } else {
         if (popcorn.state === "kernel") {
           this.updateKernel(popcorn);
-          this.kernelsToDraw.push(popcorn);
+          this.updateRenderables(popcorn);
+          nameTags.updateRenderables(popcorn);
           continue;
         } else if (popcorn.state === "popping") {
           this.updatePopping(popcorn, timeScale, deltaGravity);
@@ -162,17 +162,8 @@ class Popcorns {
         this.popcornsToDraw.push(popcorn);
         if (this.updateResults) this.updateDistanceResults();
       }
-
-      this.updateRenderables(popcorn);
-      nameTags.updateRenderables(popcorn);
     }
-
-    for (let i = 0; i < this.kernelsToDraw.length; i++) {
-      const popcorn = this.kernelsToDraw[i];
-      this.updateRenderables(popcorn);
-      nameTags.updateRenderables(popcorn);
-    }
-
+    
     for (let i = 0; i < this.popcornsToDraw.length; i++) {
       const popcorn = this.popcornsToDraw[i];
       this.updateRenderables(popcorn);
