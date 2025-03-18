@@ -37,9 +37,10 @@ class Popcorns {
     }
 
     // Sound effect
-    this.maxConcurrentPops = 10;
+    this.maxConcurrentPops = 5;
     this.activePops = 0;
-    this.popSounds = Array.from({ length: this.maxConcurrentPops }, () => new Audio("audio/pop.wav"));
+    this.volume = 0.5;
+    this.popSounds = Array.from({ length: this.maxConcurrentPops }, () => new Audio("audio/test2-4.wav"));
     this.soundIndex = 0;
 
     this.modes = modes;
@@ -213,7 +214,7 @@ class Popcorns {
   updateKernel(kernel) {
     if (kernel.popTime <= this.kernelTime) {
       kernel.pop(this.elapsedTime);
-      //this.playPop();
+      this.playPop();
       this.kernelCount--;
     }
   }
@@ -328,6 +329,7 @@ class Popcorns {
     if (this.activePops < this.maxConcurrentPops) {
       const sound = this.popSounds[this.soundIndex];
       sound.currentTime = 0;
+      sound.volume = this.volume;
       sound.play();
       
       this.soundIndex = (this.soundIndex + 1) % this.popSounds.length;
