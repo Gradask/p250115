@@ -3,7 +3,7 @@ import Camera from './Camera.js';
 import Mesh from './Mesh.js';
 import NameTags from './NameTags.js';
 import Popcorns from './Popcorns.js';
-import { render, texRenderer } from './render.js';
+import { light, render, texRenderer } from './render.js';
 import Popcorn from './Popcorn.js';
 import Mode from './Mode.js';
 import Target from './Target.js';
@@ -89,6 +89,7 @@ const init = () => {
     if (mode !== "time") {
       camera.time();
       camera.getMat();
+      light.time();
       mode = "time";
       popcorns.switchMode("time");
       popcorns.reset();
@@ -105,6 +106,7 @@ const init = () => {
     if (mode !== "distance") {
       camera.distance();
       camera.getMat();
+      light.distance();
       mode = "distance";
       popcorns.switchMode("distance");
       popcorns.reset();
