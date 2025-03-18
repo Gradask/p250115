@@ -1,7 +1,22 @@
 class Light {
   constructor() {
-    this.dir = [1.3, -0.8, -0.4];
+    this.time();
     this.normalizedDir = this.computeLightDirection();
+  }
+
+  time() {
+    this.dir = [
+      0.34944225579,
+      -0.62416338369,
+      0.06236056394
+    ]
+  }
+
+  distance() {
+    this.dir = [
+      1.3,
+      -0.8,
+      -0.4];
   }
 
   computeLightDirection() {
