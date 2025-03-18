@@ -263,17 +263,18 @@ function handleInput() {
 function parseInput(val) {
   const data = [];
   const records = val
-    .split("\n")
-    .map(name => name.trim())
+    .split(/\r?\n/)
+    .map(name => name.trim()
     .filter(name => name.length > 0);
 
   for (const record of records) {
-    const separatorIndex = record.indexOf("-"); // Find the first occurrence of -
-    if (separatorIndex !== -1) { // Note: name cannot contain -
-      const name = record.slice(0, separatorIndex).trim();
-      const movie = record.slice(separatorIndex + 1).trim();
+    const separatorIndex = record.indexOf("\t") !== -1 ? record.indexOf("\t") : record.indexOf("-");
+
+    if (separatorIndex !== -1) {
+      const name = record.slice(0, separatorIndex).trim().replace(/\s+/g, " "); // Clean up name
+      const movie = record.slice(separatorIndex + 1).trim().replace(/\s+/g, " "); // Clean up movie
       data.push({ name, movie });
-    } else { // No -
+    } else {
       data.push({ name: record, movie: null });
     }
   }
