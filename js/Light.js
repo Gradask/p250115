@@ -16,7 +16,8 @@ class Light {
     this.dir = [
       1.3,
       -0.8,
-      -0.4];
+      -0.4
+    ];
   }
 
   computeLightDirection() {
