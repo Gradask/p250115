@@ -266,7 +266,7 @@ function parseInput(val) {
   const data = [];
   const records = val
     .split(/\r?\n/)
-    .map(name => name.trim()
+    .map(name => name.trim())
     .filter(name => name.length > 0);
 
   for (const record of records) {
