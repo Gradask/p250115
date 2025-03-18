@@ -106,7 +106,7 @@ class Popcorn {
     let time;
     do {
         time = this.generateNormalDistribution(maxTime / 2, maxTime / 6);
-    } while (time < 0 || time > maxTime);
+    } while (time < 1 || time > maxTime);
     return time;
   }
 
