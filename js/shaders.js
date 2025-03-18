@@ -182,7 +182,7 @@ const mesh = {
         float diffuse = max(dot(v_normal, transformedLightDirection), 0.0);
 
         // Adjust ambient light slightly
-        float ambient = 0.6;
+        float ambient = 0.4;
         v_lightIntensity = vec3(diffuse + ambient);
         v_lightDirection = transformedLightDirection;
     }
