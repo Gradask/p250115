@@ -24,7 +24,8 @@ class Camera {
   }
 
   time() {
-    this.move(0.1, -0.1, 0.45);
+    const slightZoom = 1.15;
+    this.move(0.1 * slightZoom, -0.1 * slightZoom, 0.45 * slightZoom);
   }
 
   distance() {
