@@ -40,8 +40,12 @@ class Popcorns {
     this.maxConcurrentPops = 7;
     this.activePops = 0;
     this.volume = 0.25;
-    this.popSounds = Array.from({ length: this.maxConcurrentPops }, () => new Audio("audio/test2-4.wav"));
     this.soundIndex = 0;
+    this.popSounds = [
+        "audio/test2-4.wav"
+    ];
+     this.popBuffers = [];
+    this.initSounds();
 
     this.modes = modes;
     this.isDirty = true;
@@ -338,6 +342,69 @@ class Popcorns {
       sound.onended = () => this.activePops--;
     }
   }
+
+  async initSounds() {
+  this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  this.popBuffers = await Promise.all(this.popSounds.map(file => this.loadSound(file)));
+}
+
+async loadSound(file) {
+  try {
+      const response = await fetch(file);
+      if (!response.ok) throw new Error(`Failed to load: ${file}`);
+
+      const arrayBuffer = await response.arrayBuffer();
+
+      return new Promise((resolve, reject) => {
+          this.audioContext.decodeAudioData(arrayBuffer, resolve, reject);
+      });
+  } catch (error) {
+      console.error("Error loading sound:", error);
+      return null;
+  }
+}
+
+  playPop() {
+  if (this.activePops < this.maxConcurrentPops) {
+      const source = this.audioContext.createBufferSource();
+      source.buffer = this.popBuffers[this.soundIndex];
+
+      // Randomize pitch (playbackRate)
+      source.playbackRate.value = 0.9 + Math.random() * 0.2;
+
+      // Handle volume with GainNode
+      const gainNode = this.audioContext.createGain();
+      gainNode.gain.value = this.volume * (0.9 + Math.random() * 0.2);
+
+      // Spread audio with StereoPannerNod
+      const panner = this.audioContext.createStereoPanner();
+      panner.pan.value = (Math.random() * 2 - 1) * 0.1;
+      //panner.pan.value = 0;
+      // Connect nodes
+      source.connect(panner);
+      panner.connect(gainNode);
+      gainNode.connect(this.audioContext.destination);
+
+      source.start();
+
+      this.soundIndex = (this.soundIndex + 1) % this.popBuffers.length;
+      this.activePops++;
+
+      source.onended = () => {
+          this.activePops = Math.max(0, this.activePops - 1);
+      };
+  } else {
+      this.lowerVolumeOfActiveSounds();
+  }
+}
+
+  lowerVolumeOfActiveSounds() {
+  this.audioContext.destination.children?.forEach(node => {
+      if (node instanceof GainNode) {
+          node.gain.setTargetAtTime(node.gain.value * 0.8, this.audioContext.currentTime, 0.1);
+      }
+  });
+}
 }
 
 export default Popcorns;
