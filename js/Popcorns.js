@@ -1,4 +1,4 @@
-import { mode } from "./client.js";
+import { camera, mode } from "./client.js";
 import mat4helpers from "./mat4helpers.js";
 
 class Popcorns {
@@ -78,6 +78,7 @@ class Popcorns {
     this.lastTime = performance.now();
     this.elapsedTime = 0;
     this.kernelTime = 0;
+    this.winnerTime = 0;
   }
   
   resetModes() {
@@ -393,18 +394,50 @@ async loadSound(file) {
       source.onended = () => {
           this.activePops = Math.max(0, this.activePops - 1);
       };
-  } else {
+    } else {
       this.lowerVolumeOfActiveSounds();
+    }
   }
-}
 
   lowerVolumeOfActiveSounds() {
-  this.audioContext.destination.children?.forEach(node => {
+    this.audioContext.destination.children?.forEach(node => {
       if (node instanceof GainNode) {
           node.gain.setTargetAtTime(node.gain.value * 0.8, this.audioContext.currentTime, 0.1);
       }
-  });
-}
+    });
+  }
+
+  easeOutQuad(x) {
+    return 1 - (1 - x) * (1 - x);
+  }
+
+  jump(time, popcorn) {
+    let deltaTime = (time - this.lastTime) || 16.7;
+    deltaTime = deltaTime = Math.min(deltaTime, this.maxDeltaTime); // Cap dt
+    this.winnerTime += deltaTime / 1000;
+    
+    const dur = 20;
+    const pause = 2;
+    const height = 5;
+    const screenUp = [
+      camera.vMat[1],  // u[0]
+      camera.vMat[5],  // u[1]
+      camera.vMat[9]   // u[2]
+    ];
+  
+    let t = this.winnerTime / dur;
+    if (t > 1)  t = 1; // Clamp time
+    const factor =  1 - Math.abs(2 * t - 1);
+    const easedT = this.easeOutQuad(factor);
+    const step = easedT * height;
+  
+    if (!popcorn.basePos) popcorn.basePos = [...popcorn.position];
+    popcorn.position[0] = popcorn.basePos[0] + screenUp[0] * height * step;
+    popcorn.position[1] = popcorn.basePos[1] + screenUp[1] * height * step;
+    popcorn.position[2] = popcorn.basePos[2] + screenUp[2] * height * step;
+  
+    if (this.winnerTime > dur + pause) this.winnerTime = 0;
+  }
 }
 
 export default Popcorns;
