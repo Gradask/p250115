@@ -195,12 +195,14 @@ const init = () => {
           }
           show(resultsContainer);
           showResults = false;
-          isRunning = false;
+          //isRunning = false;
           shouldRender = true;
           deselect(startBtn);
         }
       }
     }
+
+    if (modes[mode].winner) popcorns.jump(time, modes[mode].winner);
 
     if (texRenderer.isReady && saucepan.isDirty && bottomPlate.isDirty) {
       shouldRender = true;
