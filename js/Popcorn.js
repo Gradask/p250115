@@ -39,6 +39,7 @@ class Popcorn {
 
     this.startTime = null;
     this.hasBeenInTheLead = null;
+    this.basePos = null;
 
     this.getBuffer();
   }
