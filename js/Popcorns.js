@@ -416,7 +416,7 @@ async loadSound(file) {
     deltaTime = deltaTime = Math.min(deltaTime, this.maxDeltaTime); // Cap dt
     this.winnerTime += deltaTime / 1000;
     
-    const dur = 20;
+    const dur = 2;
     const pause = 2;
     const height = 5;
     const screenUp = [
