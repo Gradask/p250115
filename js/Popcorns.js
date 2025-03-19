@@ -37,7 +37,7 @@ class Popcorns {
     }
 
     // Sound effect
-    this.maxConcurrentPops = 7;
+    this.maxConcurrentPops = 6;
     this.activePops = 0;
     this.volume = 0.25;
     this.soundIndex = 0;
