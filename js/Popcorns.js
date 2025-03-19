@@ -12,6 +12,7 @@ class Popcorns {
     this.rate = 1;
     this.elapsedTime = 0;
     this.kernelTime = 0;
+    this.winnerTime = 0;
     this.lastime;
     this.baselineDeltaTime = 16.7; // 50 fps
     this.maxDeltaTime = 67; // ~15 fps
