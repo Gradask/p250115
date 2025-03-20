@@ -12,7 +12,7 @@ class Popcorns {
     this.rate = 1;
     this.elapsedTime = 0;
     this.kernelTime = 0;
-    this.winnerTime = 0;
+    this.winnerTime = -1;
     this.lastime;
     this.baselineDeltaTime = 16.7; // 50 fps
     this.maxDeltaTime = 67; // ~15 fps
@@ -79,7 +79,7 @@ class Popcorns {
     this.lastTime = performance.now();
     this.elapsedTime = 0;
     this.kernelTime = 0;
-    this.winnerTime = 0;
+    this.winnerTime = -1;
   }
   
   resetModes() {
@@ -171,6 +171,8 @@ class Popcorns {
         if (this.updateResults) this.updateDistanceResults();
       }
     }
+
+    if (this.modes[mode].winner) this.jump(deltaTime, this.modes[mode].winner);
     
     for (let i = 0; i < this.popcornsToDraw.length; i++) {
       const popcorn = this.popcornsToDraw[i];
@@ -412,32 +414,67 @@ async loadSound(file) {
     return 1 - (1 - x) * (1 - x);
   }
 
-  jump(time, popcorn) {
-    let deltaTime = (time - this.lastTime) || 16.7;
-    deltaTime = deltaTime = Math.min(deltaTime, this.maxDeltaTime); // Cap dt
+  jump(deltaTime, popcorn) {
     this.winnerTime += deltaTime / 1000;
-    
-    const dur = 2;
-    const pause = 2;
-    const height = 5;
+    if (this.winnerTime < 0) return;
+
+    const dur = 0.5;          
+    const pause = 1;
+    const height = 50;
+
+    let t = Math.min(this.winnerTime / dur, 1); // Clamp dt
+    const easedT = this.easeOutQuad(1 - Math.abs(2 * t - 1));
+    const step = easedT * height;
+
+    if (!popcorn.basePosition) popcorn.basePosition = [...popcorn.position];
+      popcorn.baseScreenPosition = mat4helpers.worldToScreen(popcorn.basePosition.map(p => p / 60), camera.vpMat, camera.width, camera.height);
+      popcorn.topSide = popcorn.baseScreenPosition[1] < camera.height/2;
+      
+    if (mode === "time") {
+      if (popcorn.topSide) {
+        this.screenJump(popcorn, step, 0.3);
+      } else {
+        this.slideJump(popcorn, step, 0.2);
+      }
+    }
+
+    if (mode === "distance") {
+      if (popcorn.radialDistance <= this.saucepanRadius) {
+        this.worldJump(popcorn, step, 0.7);
+      } else {
+        if (popcorn.topSide) {
+          this.slideJump(popcorn, step, 0.6);
+        } else {
+          this.screenJump(popcorn, step, 0.35);
+        }
+      }
+    }
+
+    if (this.winnerTime > dur + pause) this.winnerTime = 0;
+  }
+
+  worldJump(popcorn, step, scale = 1) {
+    // Translation in world space
+    popcorn.position[2] = step * scale;
+  }
+
+  screenJump(popcorn, step, scale = 1) {
+    // Translation in screen space. Depth not preserved. Popcorn is always drawn in the front.
+    const newScreenPosition = [popcorn.baseScreenPosition[0], popcorn.baseScreenPosition[1] - step * scale];
+    popcorn.position = mat4helpers.screenToWorld(newScreenPosition, camera.vpMat, camera.width, camera.height).map(p => p * 60);
+  }
+
+  slideJump(popcorn, step, scale = 1) {
+    // Translation in world space based on camera's up vector. Depth preserved. Popcorn slides across the floor.
     const screenUp = [
       camera.vMat[1],  // u[0]
       camera.vMat[5],  // u[1]
       camera.vMat[9]   // u[2]
     ];
-  
-    let t = this.winnerTime / dur;
-    if (t > 1)  t = 1; // Clamp time
-    const factor =  1 - Math.abs(2 * t - 1);
-    const easedT = this.easeOutQuad(factor);
-    const step = easedT * height;
-  
-    if (!popcorn.basePos) popcorn.basePos = [...popcorn.position];
-    popcorn.position[0] = popcorn.basePos[0] + screenUp[0] * height * step;
-    popcorn.position[1] = popcorn.basePos[1] + screenUp[1] * height * step;
-    popcorn.position[2] = popcorn.basePos[2] + screenUp[2] * height * step;
-  
-    if (this.winnerTime > dur + pause) this.winnerTime = 0;
+
+    popcorn.position[0] = popcorn.basePosition[0] + screenUp[0] * step * scale;
+    popcorn.position[1] = popcorn.basePosition[1] + screenUp[1] * step * scale;
+    popcorn.position[2] = popcorn.basePosition[2] + screenUp[2] * step * scale;
   }
 }
 
