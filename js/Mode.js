@@ -5,9 +5,13 @@ class Mode {
   }
 
   reset() {
-    this.isRunning = true;
     this.results = "";
     this.winner = null;
+  }
+
+  start() {
+    this.reset();
+    this.isRunning = true;
   }
 
   stop() {
