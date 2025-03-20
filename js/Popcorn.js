@@ -41,6 +41,11 @@ class Popcorn {
     this.hasBeenInTheLead = null;
     this.basePos = null;
 
+    // Jumping
+    this.basePosition = null;
+    this.baseScreenPosition = null;
+    this.topSide = null;
+
     this.getBuffer();
   }
 
