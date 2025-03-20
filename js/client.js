@@ -45,6 +45,9 @@ const targetColors = [
 ]
 let target = new Target(position, PPI, targetRadius, numRings, targetColors);
 
+// Buttons
+let startBtn;
+
 const init = () => {
   document.body.style.display = "block";
   
@@ -54,7 +57,7 @@ const init = () => {
   const settingsBtn = document.getElementById("settingsBtn")
   const timeBtn = document.getElementById("time");
   const distanceBtn = document.getElementById("distance");
-  const startBtn = document.getElementById("start");
+  startBtn = document.getElementById("start");
 
   // Input
   const inputContainer = document.getElementById("input-container");
