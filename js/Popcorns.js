@@ -418,7 +418,7 @@ async loadSound(file) {
     this.winnerTime += deltaTime / 1000;
     if (this.winnerTime < 0) return;
 
-    const dur = 0.5;          
+    const dur = 0.4;          
     const pause = 1;
     const height = 50;
 
@@ -432,9 +432,9 @@ async loadSound(file) {
       
     if (mode === "time") {
       if (popcorn.topSide) {
-        this.screenJump(popcorn, step, 0.3);
+        this.screenJump(popcorn, step, 0.4);
       } else {
-        this.slideJump(popcorn, step, 0.2);
+        this.slideJump(popcorn, step, 0.3);
       }
     }
 
