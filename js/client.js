@@ -205,8 +205,6 @@ const init = () => {
       }
     }
 
-    if (modes[mode].winner) popcorns.jump(time, modes[mode].winner);
-
     if (texRenderer.isReady && saucepan.isDirty && bottomPlate.isDirty) {
       shouldRender = true;
     }
@@ -245,7 +243,15 @@ const resume = function() {
   isRunning = true;
 }
 
+function stop() {
+  deselect(startBtn);
+  popcorns.reset();
+  pause();
+}
+
 function handleInput() {
+  if (modes[mode].isRunning || modes[mode].winner) stop();
+  
   const updatedRecords = parseInput(input.value);
   const names = updatedRecords.map(record => record.name);
   const popIdMap = new Map(pops.map(pop => [pop.id, pop]));
