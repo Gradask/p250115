@@ -83,7 +83,7 @@ class Popcorns {
   }
   
   resetModes() {
-    for (const mode in this.modes) this.modes[mode].reset();
+    for (const mode in this.modes) this.modes[mode].start();
     this.updateResults = false;
   }
 
