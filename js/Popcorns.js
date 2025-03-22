@@ -283,6 +283,7 @@ class Popcorns {
   updateTimeResults() {
     this.modes.time.winner = this.all[this.all.length - 1];
     this.modes.time.stop();
+    this.updateResults = false;
   }
 
   updateDistanceResults() {
@@ -290,6 +291,7 @@ class Popcorns {
     final.sort((a, b) => b.radialDistance - a.radialDistance);
     this.modes.distance.winner = final[0];
     this.modes.distance.stop();
+    this.updateResults = false;
   }
 
   checkCollision(popcorn, deltaTime) {
