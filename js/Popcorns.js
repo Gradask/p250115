@@ -38,14 +38,15 @@ class Popcorns {
     }
 
     // Sound effect
-    this.maxConcurrentPops = 6;
+    this.maxConcurrentPops = Infinity;
     this.activePops = 0;
     this.volume = 0.25;
     this.soundIndex = 0;
     this.popSounds = [
-        "audio/test2-4.wav"
+        "audio/pop1.wav",
+        "audio/pop2.wav"
     ];
-     this.popBuffers = [];
+    this.popBuffers = [];
     this.initSounds();
 
     this.modes = modes;
@@ -335,48 +336,34 @@ class Popcorns {
     }
   }
 
-  playPop() {
-    if (this.activePops < this.maxConcurrentPops) {
-      const sound = this.popSounds[this.soundIndex];
-      sound.currentTime = 0;
-      sound.volume = this.volume;
-      sound.play();
-      
-      this.soundIndex = (this.soundIndex + 1) % this.popSounds.length;
-      this.activePops++;
-      
-      sound.onended = () => this.activePops--;
+  async initSounds() {
+    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    this.popBuffers = await Promise.all(this.popSounds.map(file => this.loadSound(file)));
+  }
+
+  async loadSound(file) {
+    try {
+        const response = await fetch(file);
+        if (!response.ok) throw new Error(`Failed to load: ${file}`);
+  
+        const arrayBuffer = await response.arrayBuffer();
+  
+        return new Promise((resolve, reject) => {
+            this.audioContext.decodeAudioData(arrayBuffer, resolve, reject);
+        });
+    } catch (error) {
+        console.error("Error loading sound:", error);
+        return null;
     }
   }
 
-  async initSounds() {
-  this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  this.popBuffers = await Promise.all(this.popSounds.map(file => this.loadSound(file)));
-}
-
-async loadSound(file) {
-  try {
-      const response = await fetch(file);
-      if (!response.ok) throw new Error(`Failed to load: ${file}`);
-
-      const arrayBuffer = await response.arrayBuffer();
-
-      return new Promise((resolve, reject) => {
-          this.audioContext.decodeAudioData(arrayBuffer, resolve, reject);
-      });
-  } catch (error) {
-      console.error("Error loading sound:", error);
-      return null;
-  }
-}
-
   playPop() {
-  if (this.activePops < this.maxConcurrentPops) {
+    if (this.activePops < this.maxConcurrentPops) {
       const source = this.audioContext.createBufferSource();
       source.buffer = this.popBuffers[this.soundIndex];
 
       // Randomize pitch (playbackRate)
-      source.playbackRate.value = 0.9 + Math.random() * 0.2;
+      source.playbackRate.value = 0.9 + Math.random() * 0.1; // 0.2
 
       // Handle volume with GainNode
       const gainNode = this.audioContext.createGain();
