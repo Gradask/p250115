@@ -6,9 +6,9 @@ class Target {
     this.segments = 64; // More segments for smoother circles
     this.colors = colors;
     this.attribs = { a_position: { data: [] }, a_color: { data: [] } };
-    this.a_position = [];
-    this.a_color = [];
     this.generateRings();
+    this.attribs.a_position.data = new Float32Array(this.attribs.a_position.data);
+    this.attribs.a_color.data = new Uint8Array(this.attribs.a_color.data);
     this.attribs.a_position.isDirty = true;
     this.attribs.a_color.isDirty = true;
     this.isReady = true;
