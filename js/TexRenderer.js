@@ -44,7 +44,9 @@ class TexRenderer {
 
     if (camera.isDirty || drawInfo.isDirty) {
       drawInfo.u_matrix = camera.vpMat;
-      drawInfo.u_resolution = [camera.width, camera.height];
+      if (!drawInfo.u_resolution) drawInfo.u_resolution = [];
+      drawInfo.u_resolution[0] = camera.width
+      drawInfo.u_resolution[1] = camera.height;
     }
     
     glhelpers.setupUniforms(gl, this.programInfo.uniforms, drawInfo);
