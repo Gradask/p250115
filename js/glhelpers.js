@@ -33,37 +33,41 @@ const glhelpers = {
     for (const id in infos) infos[id].loc = gl[method](program, id);
   },
   setupBuffers(gl, attribInfos, drawInfo) {
-    for (const attribId in drawInfo.attribs) {
-      const attrib = drawInfo.attribs[attribId];
-      const info = attribInfos[attribId];
-  
-      if (!attrib.buffer) attrib.buffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, attrib.buffer);
+  for (const attribId in drawInfo.attribs) {
+    const attrib = drawInfo.attribs[attribId];
+    const info = attribInfos[attribId];
 
-      if (attrib.isDirty) {
-        const data = info.type === "FLOAT" ? new Float32Array(attrib.data) : new Uint8Array(attrib.data);
-        gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
-        attrib.isDirty = false;
-      }
-  
-      gl.enableVertexAttribArray(info.loc);
-      gl.vertexAttribPointer(
-        info.loc,
-        info.size, 
-        gl[info.type],
-        info.normalize,
-        0, // stride
-        0 // offset
-      ); 
+    if (!attrib.buffer) attrib.buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, attrib.buffer);
+
+    if (attrib.isDirty) {
+      gl.bufferData(gl.ARRAY_BUFFER, attrib.data, gl.STATIC_DRAW);
+      attrib.isDirty = false;
     }
-  },
-  setupUniforms(gl, uniformInfos, drawInfo) {
-    for (const uniformId in uniformInfos) {
-      const info = uniformInfos[uniformId];
-      const args = info.args || [];
-      gl[info.method](info.loc, ...args, drawInfo[uniformId]);
+
+    gl.enableVertexAttribArray(info.loc);
+    gl.vertexAttribPointer(
+      info.loc,
+      info.size, 
+      gl[info.type],
+      info.normalize,
+      0, // stride
+      0 // offset
+    ); 
+  }
+},
+setupUniforms(gl, uniformInfos, drawInfo) {
+  const keys = Object.keys(uniformInfos);
+  for (let i = 0; i < keys.length; i++) {
+    const id = keys[i];
+    const info = uniformInfos[id];
+    if (info.args) {
+      gl[info.method](info.loc, false, drawInfo[id]); // hardcoded false is OK in this particular project
+    } else {
+      gl[info.method](info.loc, drawInfo[id]);
     }
-  },
+  }
+},
   async setupTexture(gl, url, params = {}) {
     const tex = this.createTexture(gl, params);
     await this.loadImage(gl, tex, url);
