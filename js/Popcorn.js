@@ -8,6 +8,13 @@ const predefinedColors = [
   [100, 0, 150], // Purple
 ]
 
+const kernelSprite = [0.8, 0.25];
+const popcornSprites = [
+  [0.4, 0.25],    // Sprite 1 
+  [0.6, 0.25],    // Sprite 2
+  [0.2, 0.25]     // Sprite 3
+];
+
 let colorIndex = 0;
 let spriteIndex = 0;
 let id = 0;
@@ -21,7 +28,18 @@ class Popcorn {
     this.tagColor = this.getColor();
     this.blinkDuration = 0.5;
 
+    // Physics
+    this.position = [0, 0, 0];
+    this.velocity = [0, 0, 0];
+    this.buffer = [0, 0];
+
     this.minZVelocity = 2;
+
+    // Texcoords
+    this.a_texcoord = [0, 0];
+    this.tagCoords = [];
+    this.relTagOffsets = [];
+
     this.reset(maxPopTime);
   }
 
@@ -29,9 +47,12 @@ class Popcorn {
     this.state = "kernel";
     this.maxPopTime = maxPopTime || this.maxPopTime;
     this.popTime = this.generateTime(this.maxPopTime);
-    this.velocity = [0, 0, 0];
-    this.a_texcoord = this.getKernelSprite();
-    if (elapsedTime === null || elapsedTime > 0) this.position = this.getPosition();
+    this.getKernelSprite();
+    if (elapsedTime === null || elapsedTime > 0) this.getPosition();
+    this.velocity[0] = 0;
+    this.velocity[1] = 0;
+    this.velocity[2] = 0;
+
     this.blink = true;
     this.blinkState = true;
     this.startBlinkTime = null;
@@ -52,8 +73,8 @@ class Popcorn {
   pop(elapsedTime) {
     this.time = elapsedTime;
     this.state = "popping";
-    this.velocity = this.getVelocity();
-    this.a_texcoord = this.getPopcornSprite();
+    this.getVelocity();
+    this.getPopcornSprite();
     this.getBuffer();
   }
 
@@ -69,25 +90,17 @@ class Popcorn {
   getBuffer() {
     const size = mode === "time" ? 32 : 16;
     const scale = this.state === "kernel" ? 1 : 1.5;
-    this.buffer = [
-      Math.round(scale * size * 0.35), // x
-      Math.round(scale * size * 0.35) // y
-    ];
+    this.buffer[0] = Math.round(scale * size * 0.35);
+    this.buffer[1] = Math.round(scale * size * 0.35);
   }
 
   getKernelSprite() {
-    return [0.8, 0.25];
+    this.a_texcoord = kernelSprite;
   }
   
   getPopcornSprite() {
-    const texcoords = [
-        [0.4, 0.25],    // Sprite 1 
-        [0.6, 0.25],    // Sprite 2
-        [0.2, 0.25]     // Sprite 3
-    ];
-    const coords = texcoords[spriteIndex];
-    spriteIndex = (spriteIndex + 1) % texcoords.length;
-    return coords;
+    this.a_texcoord = popcornSprites[spriteIndex];
+    spriteIndex = (spriteIndex + 1) % popcornSprites.length;
   }
 
   getColor() {
@@ -101,7 +114,9 @@ class Popcorn {
     const distance = Math.sqrt(Math.random()) * 170; // 170 = saucepan radius
     const x = distance * Math.cos(angle);
     const y = distance * Math.sin(angle);
-    return [x, y, 0];
+    this.position[0] = x;
+    this.position[1] = y;
+    this.position[2] = 0;
   }
 
   getRadialDistance() {
@@ -132,7 +147,9 @@ class Popcorn {
     const y = r * Math.sin(angle);
     const z = 0.1 * Math.random() * 5 + this.minZVelocity; // Random z velocity
     
-    return [x, y, z];
+    this.velocity[0] = x;
+    this.velocity[1] = y;
+    this.velocity[2] = z;
   }
 }
 
