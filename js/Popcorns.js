@@ -6,6 +6,7 @@ class Popcorns {
     this.all = [];
     this.popcorns = [];
     this.popcornsToDraw = [];
+    this.distanceWinner = null;
 
     // Time
     this.maxTime = 60;
@@ -31,11 +32,12 @@ class Popcorns {
     this.u_texSize = texSize;
     this.u_texture = 0;
     this.attribs = {
-      a_position: { data: [] },
-      a_color: { data: [] },
-      a_texcoord: { data: [] },
-      a_worldOffset: { data: [] }
+      a_position: { data: new Float32Array(500 * 3) },
+      a_color: { data: new Float32Array(500 * 3) },
+      a_texcoord: { data: new Float32Array(500 * 2) },
+      a_worldOffset: { data: new Float32Array(500 * 2) }
     }
+    this.count = 0;
 
     // Sound effect
     this.maxConcurrentPops = Infinity;
@@ -43,10 +45,13 @@ class Popcorns {
     this.volume = 0.25;
     this.soundIndex = 0;
     this.popSounds = [
-        "audio/pop1b.wav",
-        "audio/pop2b.wav"
+      "audio/pop1b.wav",
+      "audio/pop2b.wav"
     ];
     this.popBuffers = [];
+    this.gainPool = [];
+    this.pannerPool = [];
+    this.activeGainNodes = [];
     this.initSounds();
 
     this.modes = modes;
@@ -67,13 +72,15 @@ class Popcorns {
   }
 
   resetPopcorns() {
-    this.popcorns = [...this.all];
+    this.copyArray(this.popcorns, this.all);
+
     this.shuffleArray(this.all);
     for (const popcorn of this.all) popcorn.reset(this.maxTime, this.elapsedTime);
     this.addSuspense();
     this.kernelCount = this.all.length;
     this.stoppedCount = 0;
     this.disappearedCount = 0;
+    this.distanceWinner = null;
   }
   
   resetTime() {
@@ -119,9 +126,16 @@ class Popcorns {
   }
 
   generateKernels(records) {
-    this.popcorns = [...records];
-    this.all = [...records];
+    this.copyArray(this.popcorns, records);
+    this.copyArray(this.all, records);
     this.resetRenderables();
+  }
+
+  copyArray(a, b) {
+    a.length = 0;
+    for (let i = 0; i < b.length; i++) {
+      a[i] = b[i];
+    }
   }
 
   update(time, nameTags) {
@@ -183,41 +197,39 @@ class Popcorns {
   }
 
   emptyRenderables() {
-    this.attribs.a_position.data.length = 0;
-    this.attribs.a_worldOffset.data.length = 0;
-    this.attribs.a_color.data.length = 0;
-    this.attribs.a_texcoord.data.length = 0;
     this.count = 0;
   }
 
   updateRenderables(popcorn) {
-    this.attribs.a_worldOffset.data.push(
-      popcorn.worldOffset[0],
-      popcorn.worldOffset[1]
-    );
-    this.attribs.a_worldOffset.isDirty = true;
+    const i = this.count;
 
-    this.attribs.a_color.data.push(
-      popcorn.color[0],
-      popcorn.color[1],
-      popcorn.color[2],
-    );
-    this.attribs.a_color.isDirty = true;
+  this.attribs.a_position.data.set([
+    popcorn.position[0],
+    popcorn.position[1],
+    popcorn.position[2]
+  ], i * 3);
+  this.attribs.a_position.isDirty = true;
 
-    this.attribs.a_position.data.push(
-      popcorn.position[0],
-      popcorn.position[1],
-      popcorn.position[2]
-    );
-    this.attribs.a_position.isDirty = true;
+  this.attribs.a_color.data.set([
+    popcorn.color[0],
+    popcorn.color[1],
+    popcorn.color[2]
+  ], i * 3);
+  this.attribs.a_color.isDirty = true;
 
-    this.attribs.a_texcoord.data.push(
-      popcorn.a_texcoord[0],
-      popcorn.a_texcoord[1]
-    );
-    this.attribs.a_texcoord.isDirty = true;
+  this.attribs.a_texcoord.data.set([
+    popcorn.a_texcoord[0],
+    popcorn.a_texcoord[1]
+  ], i * 2);
+  this.attribs.a_texcoord.isDirty = true;
 
-    this.count++;
+  this.attribs.a_worldOffset.data.set([
+    popcorn.worldOffset[0],
+    popcorn.worldOffset[1]
+  ], i * 2);
+  this.attribs.a_worldOffset.isDirty = true;
+
+  this.count++;
   }
 
   updateKernel(kernel) {
@@ -257,6 +269,10 @@ class Popcorns {
     
       if (popcorn.velocity[0] === 0 && popcorn.velocity[1] === 0) {
         popcorn.stop();
+
+        if (!this.distanceWinner || popcorn.radialDistance > this.distanceWinner.radialDistance) {
+          this.distanceWinner = popcorn;
+        }
         this.stoppedCount++;
         if (mode === "distance" && this.stoppedCount === this.all.length) this.updateResults = true;
       }
@@ -288,48 +304,45 @@ class Popcorns {
   }
 
   updateDistanceResults() {
-    let final = [...this.popcorns];
-    final.sort((a, b) => b.radialDistance - a.radialDistance);
-    this.modes.distance.winner = final[0];
+    this.modes.distance.winner = this.distanceWinner;
     this.modes.distance.stop();
     this.updateResults = false;
   }
 
   checkCollision(popcorn, deltaTime) {
     const rSquared = popcorn.position[0] ** 2 + popcorn.position[1] ** 2;
-    const nextPosition = [
-      popcorn.position[0] + popcorn.velocity[0] * deltaTime,
-      popcorn.position[1] + popcorn.velocity[1] * deltaTime,
-      popcorn.position[2] + popcorn.velocity[2] * deltaTime,
-    ];
-    const nextRSquared = nextPosition[0] ** 2 + nextPosition[1] ** 2;
+
+    this._tempVec3 = this._tempVec3 || [0, 0, 0];
+    this._tempVec3[0] = popcorn.position[0] + popcorn.velocity[0] * deltaTime;
+    this._tempVec3[1] = popcorn.position[1] + popcorn.velocity[1] * deltaTime;
+    this._tempVec3[2] = popcorn.position[2] + popcorn.velocity[2] * deltaTime;
+
+    const nextRSquared = this._tempVec3[0] ** 2 + this._tempVec3[1] ** 2;
   
     if (rSquared <= this.saucepanRadius ** 2 && nextRSquared > this.saucepanRadius ** 2 && popcorn.position[2] <= this.saucepanHeight) {
       const radialDistance = Math.sqrt(rSquared);
-      const dx = nextPosition[0] - popcorn.position[0];
-      const dy = nextPosition[1] - popcorn.position[1];
-      const dz = nextPosition[2] - popcorn.position[2];
+      const dx = this._tempVec3[0] - popcorn.position[0];
+      const dy = this._tempVec3[1] - popcorn.position[1];
+      const dz = this._tempVec3[2] - popcorn.position[2];
       const movementDistance = Math.sqrt(dx ** 2 + dy ** 2);
   
       if (movementDistance > 0) {
         const t = (this.saucepanRadius - radialDistance) / movementDistance;
-        const collisionPoint = [
-          popcorn.position[0] + dx * t,
-          popcorn.position[1] + dy * t,
-          popcorn.position[2] + dz * t,
-        ];
+
+        this._tempVec3[0] = popcorn.position[0] + dx * t;
+        this._tempVec3[1] = popcorn.position[1] + dy * t;
+        this._tempVec3[2] = popcorn.position[2] + dz * t;
   
-        const normal = [
-          collisionPoint[0] / this.saucepanRadius,
-          collisionPoint[1] / this.saucepanRadius,
-          0,
-        ];
-        const velocityDotNormal = mat4helpers.dot(popcorn.velocity, normal);
-        popcorn.velocity[0] -= 2 * velocityDotNormal * normal[0];
-        popcorn.velocity[1] -= 2 * velocityDotNormal * normal[1];
+        this._tempVec3[0] = this._tempVec3[0] / this.saucepanRadius;
+        this._tempVec3[1] = this._tempVec3[1] / this.saucepanRadius;
+        this._tempVec3[2] = 0;
+
+        const velocityDotNormal = mat4helpers.dot(popcorn.velocity, this._tempVec3);
+        popcorn.velocity[0] -= 2 * velocityDotNormal * this._tempVec3[0];
+        popcorn.velocity[1] -= 2 * velocityDotNormal * this._tempVec3[1];
   
-        popcorn.position[0] = normal[0] * this.saucepanRadius;
-        popcorn.position[1] = normal[1] * this.saucepanRadius;
+        popcorn.position[0] = this._tempVec3[0] * this.saucepanRadius;
+        popcorn.position[1] = this._tempVec3[1] * this.saucepanRadius;
       }
     } else if (rSquared > this.saucepanRadius ** 2) {
       popcorn.isInside = false;
@@ -357,47 +370,98 @@ class Popcorns {
     }
   }
 
-  playPop() {
-    if (this.activePops < this.maxConcurrentPops) {
-      const source = this.audioContext.createBufferSource();
-      source.buffer = this.popBuffers[this.soundIndex];
-
-      // Randomize pitch (playbackRate)
-      source.playbackRate.value = 0.9 + Math.random() * 0.1; // 0.2
-
-      // Handle volume with GainNode
-      const gainNode = this.audioContext.createGain();
-      gainNode.gain.value = this.volume * (0.9 + Math.random() * 0.2);
-
-      // Spread audio with StereoPannerNod
-      const panner = this.audioContext.createStereoPanner();
-      panner.pan.value = (Math.random() * 2 - 1) * 0.1;
-      //panner.pan.value = 0;
-      // Connect nodes
-      source.connect(panner);
-      panner.connect(gainNode);
-      gainNode.connect(this.audioContext.destination);
-
-      source.start();
-
-      this.soundIndex = (this.soundIndex + 1) % this.popBuffers.length;
-      this.activePops++;
-
-      source.onended = () => {
-          this.activePops = Math.max(0, this.activePops - 1);
-      };
-    } else {
-      this.lowerVolumeOfActiveSounds();
+    async initSounds() {
+      this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      this.popBuffers = await Promise.all(this.popSounds.map(file => this.loadSound(file)));
     }
-  }
-
-  lowerVolumeOfActiveSounds() {
-    this.audioContext.destination.children?.forEach(node => {
-      if (node instanceof GainNode) {
-          node.gain.setTargetAtTime(node.gain.value * 0.8, this.audioContext.currentTime, 0.1);
+  
+    async loadSound(file) {
+      try {
+        const response = await fetch(file);
+        if (!response.ok) throw new Error(`Failed to load: ${file}`);
+  
+        const arrayBuffer = await response.arrayBuffer();
+  
+        return new Promise((resolve, reject) => {
+          this.audioContext.decodeAudioData(arrayBuffer, resolve, reject);
+        });
+      } catch (error) {
+        console.error("Error loading sound:", error);
+        return null;
       }
-    });
-  }
+    }
+  
+    playPop() {
+      if (this.activePops < this.maxConcurrentPops) {
+        const source = this.audioContext.createBufferSource();
+        source.buffer = this.popBuffers[this.soundIndex];
+  
+        // Randomize pitch (playbackRate)
+        source.playbackRate.value = 0.9 + Math.random() * 0.1;
+  
+        // Reuse or create a GainNode
+        const gainNode = this.gainPool.length > 0
+          ? this.gainPool.pop()
+          : this.audioContext.createGain();
+        gainNode.gain.value = this.volume * (0.9 + Math.random() * 0.2);
+  
+        // Reuse or create a StereoPannerNode
+        const panner = this.pannerPool.length > 0
+          ? this.pannerPool.pop()
+          : this.audioContext.createStereoPanner();
+        panner.pan.value = (Math.random() * 2 - 1) * 0.1;
+  
+        // Connect nodes: source -> panner -> gain -> destination
+        source.connect(panner);
+        panner.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+  
+        // Track active GainNode for volume adjustments
+        this.activeGainNodes.push(gainNode);
+  
+        source.start();
+  
+        this.soundIndex = (this.soundIndex + 1) % this.popBuffers.length;
+        this.activePops++;
+  
+        source.onended = () => {
+          this.activePops = Math.max(0, this.activePops - 1);
+  
+          // Remove the gain node from the active list
+          const index = this.activeGainNodes.indexOf(gainNode);
+          if (index > -1) {
+            this.activeGainNodes.splice(index, 1);
+          }
+  
+          // Disconnect nodes to allow proper cleanup
+          try {
+            source.disconnect();
+          } catch (e) { }
+          try {
+            panner.disconnect();
+          } catch (e) { }
+          try {
+            gainNode.disconnect();
+          } catch (e) { }
+  
+          // Return nodes to their pools for reuse
+          this.gainPool.push(gainNode);
+          this.pannerPool.push(panner);
+        };
+      } else {
+        this.lowerVolumeOfActiveSounds();
+      }
+    }
+  
+    lowerVolumeOfActiveSounds() {
+      this.activeGainNodes.forEach(gainNode => {
+        gainNode.gain.setTargetAtTime(
+          gainNode.gain.value * 0.8,
+          this.audioContext.currentTime,
+          0.1
+        );
+      });
+    }
 
   easeOutQuad(x) {
     return 1 - (1 - x) * (1 - x);
