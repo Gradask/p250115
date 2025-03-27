@@ -40,7 +40,7 @@ class Popcorns {
     this.count = 0;
 
     // Sound effect
-    this.maxConcurrentPops = 3; //Infinity;
+    this.maxConcurrentPops = Infinity;
     this.activePops = 0;
     this.volume = 0.25;
     this.soundIndex = 0;
