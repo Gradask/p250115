@@ -21,7 +21,7 @@ class Popcorns {
     // Physics
     this.gravity = 9.81 * 0.001;
     this.saucepanRadius = 170;
-    this.saucepanHeight = 143;
+    this.saucepanHeight = 143 * 1.35;
     this.PPI = PPI; // pixels per inch
     this.frictionFactor = 0.98 * 0.75; // Damping factor for x and y movement on the ground
     this.velocityThreshold = 0.05; // Minimum velocity below which motion stops
