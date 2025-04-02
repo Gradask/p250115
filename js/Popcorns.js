@@ -45,8 +45,8 @@ class Popcorns {
     this.volume = 0.25;
     this.soundIndex = 0;
     this.popSounds = [
-      "audio/pop1b.wav",
-      "audio/pop2b.wav"
+      "audio/pop1b2.wav",
+      "audio/pop2b2.wav"
     ];
     this.popBuffers = [];
     this.gainPool = [];
