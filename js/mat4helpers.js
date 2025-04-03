@@ -249,7 +249,7 @@ const mat4helpers = {
 
     return result;
   },
-  screenToWorld: function(screenCoords, viewProjectionMatrix, screenWidth, screenHeight) {
+  /*screenToWorld: function(screenCoords, viewProjectionMatrix, screenWidth, screenHeight) {
     // Convert screen coords to clip coords
     const ndcX = (screenCoords[0] / screenWidth) * 2 - 1;
     const ndcY = 1 - (screenCoords[1] / screenHeight) * 2;
@@ -276,6 +276,32 @@ const mat4helpers = {
     const screenY = (1 - ndcY) * 0.5 * screenHeight;
   
     return [screenX, screenY];
+  },*/
+  worldToScreen: function(worldCoords, viewProjectionMatrix, screenWidth, screenHeight) {
+    // Transform world coordinates to clip space
+    const clipCoords = this.transformMat4([], [...worldCoords, 1], viewProjectionMatrix);
+  
+    // Perform perspective division to get NDC
+    const ndcX = clipCoords[0] / clipCoords[3];
+    const ndcY = clipCoords[1] / clipCoords[3];
+    const ndcZ = clipCoords[2] / clipCoords[3]; // Preserve clip-space Z
+  
+    // Convert NDC to screen coordinates
+    const screenX = (ndcX + 1) * 0.5 * screenWidth;
+    const screenY = (1 - ndcY) * 0.5 * screenHeight;
+  
+    return [screenX, screenY, ndcZ];
+  },
+  screenToWorld: function(screenCoords, viewProjectionMatrix, screenWidth, screenHeight) {
+    const ndcX = (screenCoords[0] / screenWidth) * 2 - 1;
+    const ndcY = 1 - (screenCoords[1] / screenHeight) * 2;
+    const ndcZ = screenCoords[2]; // Use original depth (clip-space Z)
+  
+    const clipCoords = [ndcX, ndcY, ndcZ, 1];
+    const inverseViewProjectionMatrix = this.inverse(viewProjectionMatrix);
+    const worldCoords = this.transformMat4([], clipCoords, inverseViewProjectionMatrix);
+  
+    return worldCoords.slice(0, 3);
   },
   
   transformMat4: function(out, vec, mat) {
