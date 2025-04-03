@@ -467,7 +467,7 @@ class Popcorns {
     return 1 - (1 - x) * (1 - x);
   }
 
-  jump(deltaTime, popcorn) {
+  /*jump(deltaTime, popcorn) {
     this.winnerTime += deltaTime / 1000;
     if (this.winnerTime < 0) return;
 
@@ -504,18 +504,18 @@ class Popcorns {
     }
 
     if (this.winnerTime > dur + pause) this.winnerTime = 0;
-  }
+  }*/
 
   worldJump(popcorn, step, scale = 1) {
     // Translation in world space
     popcorn.position[2] = step * scale;
   }
 
-  screenJump(popcorn, step, scale = 1) {
+  /*screenJump(popcorn, step, scale = 1) {
     // Translation in screen space. Depth not preserved. Popcorn is always drawn in the front.
     const newScreenPosition = [popcorn.baseScreenPosition[0], popcorn.baseScreenPosition[1] - step * scale];
     popcorn.position = mat4helpers.screenToWorld(newScreenPosition, camera.vpMat, camera.width, camera.height).map(p => p * 60);
-  }
+  }*/
 
   slideJump(popcorn, step, scale = 1) {
     // Translation in world space based on camera's up vector. Depth preserved. Popcorn slides across the floor.
@@ -528,6 +528,69 @@ class Popcorns {
     popcorn.position[0] = popcorn.basePosition[0] + screenUp[0] * step * scale;
     popcorn.position[1] = popcorn.basePosition[1] + screenUp[1] * step * scale;
     popcorn.position[2] = popcorn.basePosition[2] + screenUp[2] * step * scale;
+  }
+
+  jump(deltaTime, popcorn) {
+    this.winnerTime += deltaTime / 1000;
+    if (this.winnerTime < 0) return;
+  
+    const dur = 0.4;
+    const pause = 1;
+    const height = 50;
+  
+    let t = Math.min(this.winnerTime / dur, 1);
+    const easedT = this.easeOutQuad(1 - Math.abs(2 * t - 1));
+    const step = easedT * height;
+  
+    if (!popcorn.basePosition) {
+      popcorn.basePosition = [...popcorn.position];
+    }
+  
+    popcorn.baseScreenPosition = mat4helpers.worldToScreen(
+      popcorn.basePosition.map(p => p / 60),
+      camera.vpMat,
+      camera.width,
+      camera.height
+    );
+    popcorn.screenZ = popcorn.baseScreenPosition[2];
+    popcorn.topSide = popcorn.baseScreenPosition[1] < camera.height / 2;
+    console.log("bz", popcorn.baseScreenPosition, popcorn.basePosition, popcorn.position)
+    if (mode === "time") {
+      if (popcorn.topSide) {
+        this.screenJump(popcorn, step, 0.4);
+      } else {
+        this.slideJump(popcorn, step, 0.3);
+      }
+    }
+  
+    if (mode === "distance") {
+      if (popcorn.radialDistance <= this.saucepanRadius) {
+        this.worldJump(popcorn, step, 0.7);
+      } else {
+        if (popcorn.topSide) {
+          this.slideJump(popcorn, step, 0.6);
+        } else {
+          this.screenJump(popcorn, step, 0.35);
+        }
+      }
+    }
+  
+    if (this.winnerTime > dur + pause) this.winnerTime = 0;
+  }
+
+  screenJump(popcorn, step, scale = 1) {
+    const newScreenPosition = [
+      popcorn.baseScreenPosition[0],
+      popcorn.baseScreenPosition[1] - step * scale,
+      popcorn.screenZ
+    ];
+  
+    popcorn.position = mat4helpers.screenToWorld(
+      newScreenPosition,
+      camera.vpMat,
+      camera.width,
+      camera.height
+    ).map(p => p * 60);
   }
 }
 
