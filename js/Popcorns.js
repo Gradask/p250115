@@ -554,7 +554,6 @@ class Popcorns {
     );
     popcorn.screenZ = popcorn.baseScreenPosition[2];
     popcorn.topSide = popcorn.baseScreenPosition[1] < camera.height / 2;
-    console.log("bz", popcorn.baseScreenPosition, popcorn.basePosition, popcorn.position)
     if (mode === "time") {
       if (popcorn.topSide) {
         this.screenJump(popcorn, step, 0.4);
