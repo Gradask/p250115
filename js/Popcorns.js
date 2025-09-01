@@ -187,7 +187,7 @@ class Popcorns {
       }
     }
 
-    if (this.modes[mode].winner) this.jump(deltaTime, this.modes[mode].winner);
+    //if (this.modes[mode].winner) this.jump(deltaTime, this.modes[mode].winner);
     
     for (let i = 0; i < this.popcornsToDraw.length; i++) {
       const popcorn = this.popcornsToDraw[i];
