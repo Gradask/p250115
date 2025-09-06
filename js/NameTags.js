@@ -6,14 +6,16 @@ class NameTags {
     this.u_texture = 1;
     this.fontInfo = fontInfo;
     this.baseSize = 8;
+    this.scaleFactor = 1;
 
-    const maxChars = 300 * 10;
+    const maxChars = 300 * 10; // num contestants * mean word length
 
     this.attribs = {
       a_position: { data: new Float32Array(maxChars * 3), index: 0 },  // x, y, z
       a_color: { data: new Uint8Array(maxChars * 3), index: 0 },        // r, g, b
       a_texcoord: { data: new Float32Array(maxChars * 2), index: 0 },   // u, v
-      a_worldOffset: { data: new Float32Array(maxChars * 2), index: 0 } // x, y
+      a_worldOffset: { data: new Float32Array(maxChars * 2), index: 0 }, // x, y
+      a_stroke: { data: new Float32Array(maxChars * 1), index: 0 } // float
     };
     this.isDirty = true;
   }
@@ -61,8 +63,8 @@ class NameTags {
       const u1 = u / tw;
       const v1 = v / th;
   
-      const extraOffset = this.u_pointSize === 16 ? 2 : 0;
-      const offsetX = Math.round(extraOffset + i * this.u_pointSize * 0.64);
+      let extraOffset = 2 * this.scaleFactor - 1;
+      const offsetX = Math.round(extraOffset + i * this.u_pointSize * /* 0.64 */ 0.68);
       const offsetY = extraOffset;
   
       if (!coords[index]) coords[index] = [0, 0];
@@ -80,8 +82,8 @@ class NameTags {
   }
 
   updateSize(pops, setting, popcorns) {
-    const scaleFactor = parseFloat(setting.replace("x", ""));
-    this.u_pointSize = this.baseSize * scaleFactor;
+    this.scaleFactor = parseFloat(setting.replace("x", ""));
+    this.u_pointSize = this.baseSize * this.scaleFactor;
     this.u_texture = this.u_pointSize === 8 ? 1 : 2;
     this.generateTags(pops);
     this.resetRenderables(popcorns);
@@ -100,16 +102,24 @@ class NameTags {
     this.attribs.a_worldOffset.index = 0;
     this.attribs.a_color.index = 0;
     this.attribs.a_texcoord.index = 0;
+    this.attribs.a_stroke.index = 0;
     this.count = 0; 
   }
 
   updateRenderables(popcorn) {
+    if (popcorn.state === "kernel" || !popcorn.isInside) {
+      popcorn.stroke = 0;
+    } else {
+      popcorn.stroke = 1;
+    }
+
     const sanitized = this.sanitizedNames[popcorn.name] || "";
 
     const ap = this.attribs.a_position;
     const aw = this.attribs.a_worldOffset;
     const ac = this.attribs.a_color;
     const at = this.attribs.a_texcoord;
+    const as = this.attribs.a_stroke;
 
     for (let j = 0; j < sanitized.length; j++) {
       this.ensureCapacity(ap, 3);
@@ -133,6 +143,10 @@ class NameTags {
       at.data[at.index++] = popcorn.tagCoords[j][0];
       at.data[at.index++] = popcorn.tagCoords[j][1];
       at.isDirty = true;
+
+      this.ensureCapacity(as, 1);
+      as.data[as.index++] = popcorn.stroke;
+      as.isDirty = true;
 
       this.count++;
     }
