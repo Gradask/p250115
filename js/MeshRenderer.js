@@ -10,11 +10,21 @@ class MeshRenderer {
     this.programInfo = programInfo;
     glhelpers.initAttribs(gl, this.program, this.programInfo.attribs);    
     glhelpers.initUniforms(gl, this.program, this.programInfo.uniforms);
+    this.setupTextures(gl);
+  }
+
+  async setupTextures(gl) {
+    this.tex = await glhelpers.setupTexture(gl, "mesh/Map__45_Normal_Bump.png");
+    gl.activeTexture(gl.TEXTURE3);
+    gl.bindTexture(gl.TEXTURE_2D, this.tex);
   }
 
   render(drawInfo) {
     const gl = this.gl;
     gl.useProgram(this.program);
+
+    gl.activeTexture(gl.TEXTURE3);
+    gl.bindTexture(gl.TEXTURE_2D, this.tex);
 
     glhelpers.setupBuffers(gl, this.programInfo.attribs, drawInfo);
 
