@@ -42,8 +42,6 @@ function render() {
   gl.disable(gl.DEPTH_TEST);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  gl.disable(gl.DEPTH_TEST);
-
   if (mode === "distance" && target.isReady) basicRenderer.render(target);
   gl.enable(gl.CULL_FACE);
   if (bottomPlate.isReady) meshRenderer.render(bottomPlate);
@@ -67,7 +65,9 @@ function renderBackgroundSnapshot() {
   gl.bindFramebuffer(gl.FRAMEBUFFER, backgroundFbo);
   gl.viewport(0, 0, canvas.width, canvas.height);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
+  
+  if (mode === "distance" && target.isReady) basicRenderer.render(target);
+  
   gl.enable(gl.DEPTH_TEST);
   gl.enable(gl.CULL_FACE);
 
@@ -97,4 +97,5 @@ window.addEventListener("resize", () => {
 const light = new Light();
 
 export { fb, render, gl, light, texRenderer };
+
 
