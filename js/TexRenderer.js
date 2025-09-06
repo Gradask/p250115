@@ -31,7 +31,7 @@ class TexRenderer {
       TEXTURE_MAG_FILTER: "NEAREST"
     });
 
-    let tex4 = await glhelpers.setupTexture(gl, "mesh/Map__45_Normal_Bump.png");
+    //let tex4 = await glhelpers.setupTexture(gl, "mesh/Map__45_Normal_Bump.png");
   
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tex1);
@@ -42,9 +42,8 @@ class TexRenderer {
     gl.activeTexture(gl.TEXTURE2);
     gl.bindTexture(gl.TEXTURE_2D, tex3);
 
-    gl.activeTexture(gl.TEXTURE3);
-    gl.bindTexture(gl.TEXTURE_2D, tex4);
-
+    //gl.activeTexture(gl.TEXTURE3);
+    //gl.bindTexture(gl.TEXTURE_2D, tex4);
     
     this.isReady = true;
   }
