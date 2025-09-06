@@ -48,16 +48,11 @@ function render() {
   gl.enable(gl.DEPTH_TEST);
   if (saucepan.isReady) meshRenderer.render(saucepan);
 
-  if (bottomPlate.isReady && saucepan.isReady && !fb.ready) {
+  if (popcorns.all.length > 0) {
+    if (bottomPlate.isReady && saucepan.isReady && !fb.ready) {
       renderBackgroundSnapshot();
       fb.ready = true;
     }
-
-  if (popcorns.all.length > 0) {
-    //if (bottomPlate.isReady && saucepan.isReady && !fb.ready) {
-      //renderBackgroundSnapshot();
-      //fb.ready = true;
-    //}
     gl.depthMask(false);
     texRenderer.render(popcorns);
     gl.disable(gl.DEPTH_TEST);
@@ -95,13 +90,14 @@ window.addEventListener("resize", () => {
   backgroundTexture = glhelpers.createBackgroundTexture(gl, canvas.width, canvas.height);
   depthBuffer = glhelpers.createDepthBuffer(gl, canvas.width, canvas.height);
   backgroundFbo = glhelpers.createBackgroundFbo(gl, backgroundTexture, depthBuffer);
-  render();
+
   fb.ready = false;
 });
 
 const light = new Light();
 
 export { fb, render, gl, light, texRenderer };
+
 
 
 
