@@ -168,6 +168,7 @@ const labels = {
       vec2 cellSize = vec2(16.0 / u_texSize.x, 16.0 / u_texSize.y);
       //vec2 uv = v_texcoord + (gl_PointCoord * cellSize);
       vec2 uv = v_texcoord + ((gl_PointCoord * cellSize) + (0.5 / u_texSize));
+      uv = clamp(uv, v_texcoord, v_texcoord + cellSize - (1.0 / u_texSize));
       vec4 texColor = texture(u_texture, uv);
     
       if (texColor.a < 0.5) {
@@ -365,5 +366,6 @@ const mesh = {
 }
 
 export { basic, labels, mesh, tex };
+
 
 
