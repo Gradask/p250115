@@ -92,12 +92,12 @@ window.addEventListener("resize", () => {
   backgroundFbo = glhelpers.createBackgroundFbo(gl, backgroundTexture, depthBuffer);
 
   fb.ready = false;
-  renderBackgroundSnapshot();
 });
 
 const light = new Light();
 
 export { fb, render, gl, light, texRenderer };
+
 
 
 
