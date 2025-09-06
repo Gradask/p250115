@@ -26,7 +26,10 @@ const labelRenderer = new LabelRenderer(gl, labelsProgram, labels);
 const meshProgram = glhelpers.createProgram(gl, mesh.vs, mesh.fs);
 const meshRenderer = new MeshRenderer(gl, meshProgram, mesh);
 
-let fbReady = false;
+//let fbReady = false;
+const fb = {
+  ready: false
+};
 
 let backgroundTexture = glhelpers.createBackgroundTexture(gl, canvas.width, canvas.height);
 let depthBuffer = glhelpers.createDepthBuffer(gl, canvas.width, canvas.height);
@@ -48,9 +51,9 @@ function render() {
   if (saucepan.isReady) meshRenderer.render(saucepan);
 
   if (popcorns.all.length > 0) {
-    if (bottomPlate.isReady && saucepan.isReady && !fbReady) {
+    if (bottomPlate.isReady && saucepan.isReady && !fb.ready) {
       renderBackgroundSnapshot();
-      fbReady = true;
+      fb.ready = true;
     }
     gl.depthMask(false);
     texRenderer.render(popcorns);
@@ -88,9 +91,10 @@ window.addEventListener("resize", () => {
   depthBuffer = glhelpers.createDepthBuffer(gl, canvas.width, canvas.height);
   backgroundFbo = glhelpers.createBackgroundFbo(gl, backgroundTexture, depthBuffer);
 
-  fbReady = false;
+  fb.ready = false;
 });
 
 const light = new Light();
 
-export { render, gl, light, texRenderer };
+export { fb, render, gl, light, texRenderer };
+
