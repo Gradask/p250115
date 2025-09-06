@@ -18,8 +18,19 @@ class TexRenderer {
       TEXTURE_MIN_FILTER: "NEAREST",
       TEXTURE_MAG_FILTER: "NEAREST"
     });
-    let tex2 = await glhelpers.setupTexture(gl, "img/font1.png");
-    let tex3 = await glhelpers.setupTexture(gl, "img/font2.png");
+    let tex2 = await glhelpers.setupTexture(gl, "img/font1b.png", {
+      TEXTURE_WRAP_S: "CLAMP_TO_EDGE",
+      TEXTURE_WRAP_T: "CLAMP_TO_EDGE",
+      TEXTURE_MIN_FILTER: "NEAREST",
+      TEXTURE_MAG_FILTER: "NEAREST"
+    });
+    let tex3 = await glhelpers.setupTexture(gl, "img/font2b.png", {
+      TEXTURE_WRAP_S: "CLAMP_TO_EDGE",
+      TEXTURE_WRAP_T: "CLAMP_TO_EDGE",
+      TEXTURE_MIN_FILTER: "NEAREST",
+      TEXTURE_MAG_FILTER: "NEAREST"
+    });
+
     let tex4 = await glhelpers.setupTexture(gl, "mesh/Map__45_Normal_Bump.png");
   
     gl.activeTexture(gl.TEXTURE0);
@@ -33,6 +44,8 @@ class TexRenderer {
 
     gl.activeTexture(gl.TEXTURE3);
     gl.bindTexture(gl.TEXTURE_2D, tex4);
+
+    
     this.isReady = true;
   }
 
@@ -48,7 +61,7 @@ class TexRenderer {
       drawInfo.u_resolution[0] = camera.width
       drawInfo.u_resolution[1] = camera.height;
     }
-    
+
     glhelpers.setupUniforms(gl, this.programInfo.uniforms, drawInfo);
 
     gl.drawArrays(gl.POINTS, 0, drawInfo.count);
