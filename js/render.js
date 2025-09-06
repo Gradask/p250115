@@ -90,6 +90,8 @@ window.addEventListener("resize", () => {
   backgroundTexture = glhelpers.createBackgroundTexture(gl, canvas.width, canvas.height);
   depthBuffer = glhelpers.createDepthBuffer(gl, canvas.width, canvas.height);
   backgroundFbo = glhelpers.createBackgroundFbo(gl, backgroundTexture, depthBuffer);
+   gl.activeTexture(gl.TEXTURE4); // use unit 1 (atlas is unit 0)
+    gl.bindTexture(gl.TEXTURE_2D, backgroundTexture);
 
   fb.ready = false;
 });
@@ -97,6 +99,7 @@ window.addEventListener("resize", () => {
 const light = new Light();
 
 export { fb, render, gl, light, texRenderer };
+
 
 
 
