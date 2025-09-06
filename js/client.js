@@ -3,7 +3,7 @@ import Camera from './Camera.js';
 import Mesh from './Mesh.js';
 import NameTags from './NameTags.js';
 import Popcorns from './Popcorns.js';
-import { light, render, texRenderer } from './render.js';
+import { fb, light, render, texRenderer } from './render.js';
 import Popcorn from './Popcorn.js';
 import Mode from './Mode.js';
 import Target from './Target.js';
@@ -101,6 +101,7 @@ const init = () => {
       deselect(distanceBtn);
       deselect(startBtn);
       pause();
+      fb.ready = false;
       shouldRender = true;
     }
   });
@@ -118,6 +119,7 @@ const init = () => {
       deselect(timeBtn);
       deselect(startBtn);
       pause();
+      fb.ready = false;
       shouldRender = true;
     }
   });
@@ -325,3 +327,4 @@ function updateMovie(pops, updatedRecords) {
 }
 
 export { camera, saucepan, target, popcorns, nameTags, mode, bottomPlate };
+
