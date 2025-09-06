@@ -137,7 +137,7 @@ const labels = {
       windowPos += a_worldOffset;
 
       // Snap to nearest pixel
-      windowPos = floor(windowPos + 0.5);
+      windowPos = floor(windowPos) + 0.5;
 
       // Convert back to clip space
       vec2 snappedNDC = (windowPos / u_resolution - 0.5) * 2.0;
@@ -364,3 +364,4 @@ const mesh = {
 }
 
 export { basic, labels, mesh, tex };
+
