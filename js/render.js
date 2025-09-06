@@ -91,12 +91,15 @@ window.addEventListener("resize", () => {
   depthBuffer = glhelpers.createDepthBuffer(gl, canvas.width, canvas.height);
   backgroundFbo = glhelpers.createBackgroundFbo(gl, backgroundTexture, depthBuffer);
 
-  fb.ready = false;
+  //fb.ready = false;
+  renderBackgroundSnapshot();
+      fb.ready = true;
 });
 
 const light = new Light();
 
 export { fb, render, gl, light, texRenderer };
+
 
 
 
