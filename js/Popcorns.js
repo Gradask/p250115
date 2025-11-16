@@ -117,7 +117,7 @@ class Popcorns {
     this.all.sort((a, b) => a.popTime - b.popTime);
     const last = this.all[this.all.length - 1];
     const secondToLast = this.all[this.all.length - 2];
-    const scaleFactor = this.maxTime/60 * 3; // 3 * 0.1, 0.5, 1, 2, 10
+    const scaleFactor = this.maxTime/60 * 2; // 2 * 0.1, 0.5, 1, 2, 10
     if (!secondToLast) return;
     last.popTime += scaleFactor; 
     secondToLast.popTime += scaleFactor;
